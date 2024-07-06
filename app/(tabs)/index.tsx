@@ -13,7 +13,7 @@ import {
   YStack,
 } from 'tamagui'
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <YStack f={1} gap="$4" pt="$5" pb="$5">
