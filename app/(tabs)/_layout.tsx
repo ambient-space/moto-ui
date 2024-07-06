@@ -1,44 +1,79 @@
-import { Tabs } from "expo-router";
-import React from "react";
-
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { router, Tabs } from 'expo-router'
+import { Avatar, Button, useTheme, XStack } from 'tamagui'
+import { Bell, Bike, Cog, Home, UserCircle, Users } from '@tamagui/lucide-icons'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme()
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: 'transparent',
+        },
+        headerLeft: () => (
+          <Button
+            unstyled
+            px="$4"
+            onPress={() => {
+              // open profile page
+              router.push('profile')
+            }}
+          >
+            <Avatar circular size="$2">
+              <Avatar.Fallback backgroundColor="$blue10" />
+            </Avatar>
+          </Button>
+        ),
+        headerRight: () => (
+          <XStack jc="center" ai="center" px="$4">
+            <Button
+              unstyled
+              onPress={() => {
+                // open profile page
+              }}
+            >
+              <Bell size="$1" />
+            </Button>
+          </XStack>
+        ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
-          ),
+          title: 'Explore',
+          tabBarIcon: ({ color }) => <Home color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="trips"
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
-          ),
+          title: 'Trips',
+          tabBarIcon: ({ color }) => <Bike color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="communities"
+        options={{
+          title: 'Communities',
+          tabBarIcon: ({ color }) => <Users color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="personal"
+        options={{
+          title: 'My Rides',
+          tabBarIcon: ({ color }) => <UserCircle color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <Cog color={color} />,
         }}
       />
     </Tabs>
-  );
+  )
 }
