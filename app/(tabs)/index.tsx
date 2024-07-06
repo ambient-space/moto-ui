@@ -1,70 +1,79 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { DemoCard } from 'components/Card'
+import {
+  Button,
+  Circle,
+  H1,
+  H3,
+  Paragraph,
+  ScrollView,
+  Separator,
+  Square,
+  Text,
+  XStack,
+  YStack,
+} from 'tamagui'
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+export default function TabOneScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <YStack f={1} gap="$4" pt="$5" pb="$5">
+        <YStack>
+          <H1 textAlign="left" width="100%" px="$4" fontWeight="$2">
+            Welcome to{' '}
+            <Text fontWeight="$16" color="$green10Light">
+              Moto
+            </Text>
+          </H1>
+          <Paragraph textAlign="left" width="100%" px="$4" mb="$2" color="$black12">
+            Find the best communities for you
+          </Paragraph>
+        </YStack>
+        <XStack gap="$4" ai="center" jc="space-between" px="$4">
+          <H3 textAlign="left">Trips near you</H3>
+          <Button unstyled color="$blue10">
+            View more
+          </Button>
+        </XStack>
+        <ScrollView
+          backgroundColor="$background"
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ flexGrow: 0 }}
+        >
+          <XStack>
+            <Square mx="$4" size={120} backgroundColor="$red9" />
+            <Circle mx="$4" size={120} backgroundColor="$orange9" />
+            <Square mx="$4" size={120} backgroundColor="$yellow9" />
+            <Circle mx="$4" size={120} backgroundColor="$green9" />
+            <Square mx="$4" size={120} backgroundColor="$blue9" />
+            <Circle mx="$4" size={120} backgroundColor="$purple9" />
+            <Square mx="$4" size={120} backgroundColor="$pink9" />
+            <Circle mx="$4" size={120} backgroundColor="$red9" />
+          </XStack>
+        </ScrollView>
+        <Separator marginVertical={15} width="100%" px="$4" />
+        <XStack gap="$4" ai="center" jc="space-between" px="$4">
+          <H3 textAlign="left">Communities for you</H3>
+          <Button unstyled color="$blue10">
+            View more
+          </Button>
+        </XStack>
+        <ScrollView
+          backgroundColor="$background"
+          horizontal
+          style={{ flexGrow: 0 }}
+          px="$4"
+          showsHorizontalScrollIndicator={false}
+        >
+          <XStack gap="$4" pr="$4">
+            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+          </XStack>
+        </ScrollView>
+      </YStack>
+    </ScrollView>
+  )
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
