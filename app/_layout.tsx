@@ -1,37 +1,95 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import '../tamagui-web.css'
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useEffect } from 'react'
+import { useColorScheme } from 'react-native'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { useFonts } from 'expo-font'
+import { SplashScreen, Stack } from 'expo-router'
+import { Provider } from './Provider'
+import { Button } from 'tamagui'
+import { Bell } from '@tamagui/lucide-icons'
+
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary,
+} from 'expo-router'
+
+export const unstable_settings = {
+  // Ensure that reloading on `/modal` keeps a back button present.
+  initialRouteName: '(tabs)',
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [interLoaded, interError] = useFonts({
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  })
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (interLoaded || interError) {
+      // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [interLoaded, interError])
 
-  if (!loaded) {
-    return null;
+  if (!interLoaded && !interError) {
+    return null
   }
 
+  return <RootLayoutNav />
+}
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme()
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+    <Provider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="profile"
+            options={{
+              headerShown: true,
+              headerBackTitle: 'Back',
+              headerBackVisible: true,
+              headerTransparent: true,
+              headerTitle: '',
+              headerRight: () => (
+                <Button
+                  unstyled
+                  onPress={() => {
+                    // open profile page
+                  }}
+                >
+                  <Bell size="$1" />
+                </Button>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="join-community"
+            options={{
+              headerShown: true,
+              headerBackTitle: 'Back',
+              headerBackVisible: true,
+              headerStyle: {
+                backgroundColor: 'black',
+              },
+              animation: 'slide_from_bottom',
+              animationDuration: 500,
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
+  )
 }
