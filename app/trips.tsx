@@ -1,20 +1,26 @@
 import { DemoCard } from '@/components/Card'
-import { Input, ScrollView, View, YStack } from 'tamagui'
+import { useTripStore } from '@/state/tripStore'
+import { SafeAreaView } from 'react-native'
+import { Input, ScrollView, YStack } from 'tamagui'
 
 export default function TripsScreen() {
+  const trips = useTripStore((state) => state.trips)
   return (
-    <View>
-      <Input mx="$2" my="$5" placeholder="Search for trips" />
+    <SafeAreaView>
+      <ScrollView h="100%">
+        <Input mx="$2" my="$5" placeholder="Search for trips" />
 
-      <ScrollView>
         <YStack gap="$2" mx="$2">
-          <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-          <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-          <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-          <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-          <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+          {trips.length > 0 &&
+            trips.map((c) => (
+              <DemoCard key={c.id} title={c.name} description={c.description} />
+            ))}
+          {trips.length > 0 &&
+            trips.map((c) => (
+              <DemoCard key={c.id} title={c.name} description={c.description} />
+            ))}
         </YStack>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 }
