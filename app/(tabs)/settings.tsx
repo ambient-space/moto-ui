@@ -1,4 +1,5 @@
 import useAuthStore from '@/state/authStore'
+import { router } from 'expo-router'
 import { Button, Text, View } from 'tamagui'
 
 export default function Settings() {
@@ -11,6 +12,7 @@ export default function Settings() {
       <Button
         onPress={() => {
           logout()
+          router.push('/')
         }}
         color="$red10"
       >
