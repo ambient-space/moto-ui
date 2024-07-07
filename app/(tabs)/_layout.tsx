@@ -1,10 +1,8 @@
 import { router, Tabs } from 'expo-router'
-import { Avatar, Button, useTheme, XStack } from 'tamagui'
-import { Bell, Bike, Cog, Home, UserCircle, Users } from '@tamagui/lucide-icons'
+import { Avatar, Button, XStack } from 'tamagui'
+import { Bell, Cog, Home, UserCircle } from '@tamagui/lucide-icons'
 
-export default function TabLayout() {
-  const theme = useTheme()
-
+export default function MainLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -40,26 +38,13 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <Home color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="trips"
-        options={{
-          title: 'Trips',
-          tabBarIcon: ({ color }) => <Bike color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="communities"
-        options={{
-          title: 'Communities',
-          tabBarIcon: ({ color }) => <Users color={color} />,
-        }}
-      />
+
       <Tabs.Screen
         name="personal"
         options={{
