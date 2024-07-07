@@ -1,14 +1,14 @@
 import { DemoCard } from '@/components/Card'
+import { useCommunityStore } from '@/state/communityStore'
+import { useTripStore } from '@/state/tripStore'
 import { router } from 'expo-router'
 import {
   Button,
-  Circle,
   H1,
   H3,
   Paragraph,
   ScrollView,
   Separator,
-  Square,
   Text,
   useTheme,
   XStack,
@@ -17,6 +17,8 @@ import {
 
 export default function HomeScreen() {
   const theme = useTheme()
+  const communities = useCommunityStore((state) => state.communities)
+  const trips = useTripStore((state) => state.trips)
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <YStack f={1} gap="$4" pt="$5" pb="$5">
@@ -44,20 +46,17 @@ export default function HomeScreen() {
           </Button>
         </XStack>
         <ScrollView
-          backgroundColor="$background"
+          backgroundColor={theme.background05}
           horizontal
-          showsHorizontalScrollIndicator={false}
           style={{ flexGrow: 0 }}
+          px="$4"
+          showsHorizontalScrollIndicator={false}
         >
-          <XStack>
-            <Square mx="$4" size={120} backgroundColor="$red9" />
-            <Circle mx="$4" size={120} backgroundColor="$orange9" />
-            <Square mx="$4" size={120} backgroundColor="$yellow9" />
-            <Circle mx="$4" size={120} backgroundColor="$green9" />
-            <Square mx="$4" size={120} backgroundColor="$blue9" />
-            <Circle mx="$4" size={120} backgroundColor="$purple9" />
-            <Square mx="$4" size={120} backgroundColor="$pink9" />
-            <Circle mx="$4" size={120} backgroundColor="$red9" />
+          <XStack gap="$4" pr="$4">
+            {trips.length > 0 &&
+              trips.map((c) => (
+                <DemoCard key={c.id} title={c.name} description={c.description} />
+              ))}
           </XStack>
         </ScrollView>
         <Separator marginVertical={15} width="100%" px="$4" />
@@ -81,11 +80,10 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
         >
           <XStack gap="$4" pr="$4">
-            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
-            <DemoCard title="DBBR Delhi" description="Delhi's best riding motorcade" />
+            {communities.length > 0 &&
+              communities.map((c) => (
+                <DemoCard key={c.id} title={c.name} description={c.description} />
+              ))}
           </XStack>
         </ScrollView>
       </YStack>
