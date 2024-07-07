@@ -6,8 +6,6 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { Provider } from './Provider'
-import { Button } from 'tamagui'
-import { Bell } from '@tamagui/lucide-icons'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -16,7 +14,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: '/',
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -49,43 +47,45 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="(tabs)"
+            name="trips"
             options={{
-              headerShown: false,
+              headerBackTitleVisible: false,
+              headerTitle: 'Explore Trips',
+            }}
+          />
+          <Stack.Screen
+            name="communities"
+            options={{
+              headerBackTitleVisible: false,
+              headerTitle: 'Explore Communities',
             }}
           />
           <Stack.Screen
             name="profile"
             options={{
-              headerShown: true,
-              headerBackTitle: 'Back',
-              headerBackVisible: true,
+              headerBackTitleVisible: false,
               headerTransparent: true,
               headerTitle: '',
-              headerRight: () => (
-                <Button
-                  unstyled
-                  onPress={() => {
-                    // open profile page
-                  }}
-                >
-                  <Bell size="$1" />
-                </Button>
-              ),
             }}
           />
           <Stack.Screen
             name="join-community"
             options={{
-              headerShown: true,
-              headerBackTitle: 'Back',
-              headerBackVisible: true,
-              headerStyle: {
-                backgroundColor: 'black',
-              },
-              animation: 'slide_from_bottom',
-              animationDuration: 500,
+              headerBackTitleVisible: false,
+              headerTransparent: true,
+              headerTitle: '',
+            }}
+          />
+          <Stack.Screen name="navigation" />
+          <Stack.Screen
+            name="community-info"
+            options={{
+              headerBackTitleVisible: false,
+              headerTransparent: true,
+              headerTitle: '',
             }}
           />
         </Stack>
