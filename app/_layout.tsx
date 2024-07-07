@@ -6,6 +6,9 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { Provider } from './Provider'
+import useAuthStore from '@/state/authStore'
+import { useCommunityStore } from '@/state/communityStore'
+import { useTripStore } from '@/state/tripStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,17 +45,47 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const fetchCommunities = useCommunityStore((state) => state.fetchCommunities)
+  const fetchTrips = useTripStore((state) => state.fetchTrips)
 
+  useEffect(() => {
+    ;(async () => {
+      if (isAuthenticated) {
+        try {
+          fetchCommunities()
+          fetchTrips()
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    })()
+  }, [isAuthenticated])
   return (
     <Provider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="trips"
             options={{
               headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: 'transparent',
+              },
+              headerTransparent: true,
               headerTitle: 'Explore Trips',
             }}
           />
