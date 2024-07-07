@@ -1,11 +1,21 @@
-import { Text, View } from 'tamagui'
+import { DemoCard } from '@/components/Card'
+import { useCommunityStore } from '@/state/communityStore'
+import { Input, ScrollView, View, YStack } from 'tamagui'
 
 export default function CommunitiesScreen() {
+  const communities = useCommunityStore((state) => state.communities)
   return (
-    <View flex={1} alignItems="center" justifyContent="center">
-      <Text fontSize={20} color="$blue10">
-        Tab Two
-      </Text>
+    <View>
+      <Input mx="$2" my="$5" placeholder="Search for communities" />
+
+      <ScrollView>
+        <YStack gap="$2" mx="$2">
+          {communities.length > 0 &&
+            communities.map((c) => (
+              <DemoCard key={c.id} title={c.name} description={c.description} />
+            ))}
+        </YStack>
+      </ScrollView>
     </View>
   )
 }
