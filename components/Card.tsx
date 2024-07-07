@@ -29,9 +29,7 @@ export function DemoCard(props: TDemoCardProps) {
         py="$2"
         borderBottomStartRadius="$2"
         borderBottomEndRadius="$2"
-        style={{
-          backgroundColor: 'rgba(24, 24, 24, 0.7)',
-        }}
+        backgroundColor="$background075"
       >
         <XStack ai="center" gap="$2">
           <XStack>
