@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import { Avatar, Card, type CardProps, H2, Image, Paragraph, Text, XStack } from 'tamagui'
+import { Avatar, Card, type CardProps, H3, Image, Paragraph, XStack } from 'tamagui'
 
 export type TDemoCardProps = CardProps & {
   title: string
@@ -18,32 +18,71 @@ export function DemoCard(props: TDemoCardProps) {
       }}
     >
       <Card.Header padded>
-        <H2>{props.title}</H2>
-        <Paragraph theme="alt2">{props.description}</Paragraph>
+        <H3>{props.title}</H3>
+        <Paragraph theme="alt2" maxWidth="50%">
+          {props.description}
+        </Paragraph>
       </Card.Header>
       <Card.Footer
         w="100%"
         px="$4"
         py="$2"
+        borderBottomStartRadius="$2"
+        borderBottomEndRadius="$2"
         style={{
           backgroundColor: 'rgba(24, 24, 24, 0.7)',
-          borderRadius: '$12',
-          filter: 'blur(20)',
         }}
       >
-        <XStack f={1} ai="center" jc="space-between">
+        <XStack ai="center" gap="$2">
           <XStack>
-            <Avatar circular size="$1.5" zIndex={2}>
+            <Avatar
+              circular
+              size="$1.5"
+              zIndex={2}
+              borderColor="white"
+              borderWidth="$0.5"
+            >
+              <Avatar.Image
+                source={{
+                  uri: 'https://randomuser.me/api/portraits/women/27.jpg',
+                  height: 140,
+                }}
+              />
               <Avatar.Fallback backgroundColor="$blue10" />
             </Avatar>
-            <Avatar circular size="$1.5" ml="$-2.5" zIndex={1}>
+            <Avatar
+              circular
+              size="$1.5"
+              ml="$-2.5"
+              zIndex={1}
+              borderColor="white"
+              borderWidth="$0.5"
+            >
+              <Avatar.Image
+                source={{
+                  uri: 'https://randomuser.me/api/portraits/women/21.jpg',
+                  height: 140,
+                }}
+              />
               <Avatar.Fallback backgroundColor="$pink10" />
             </Avatar>
-            <Avatar circular size="$1.5" ml="$-2.5">
+            <Avatar
+              circular
+              size="$1.5"
+              ml="$-2.5"
+              borderColor="white"
+              borderWidth="$0.5"
+            >
+              <Avatar.Image
+                source={{
+                  uri: 'https://randomuser.me/api/portraits/men/27.jpg',
+                  height: 140,
+                }}
+              />
               <Avatar.Fallback backgroundColor="$blue11" />
             </Avatar>
           </XStack>
-          <Text>200 members</Text>
+          <Paragraph color="$white">200 members</Paragraph>
         </XStack>
       </Card.Footer>
       <Card.Background>
