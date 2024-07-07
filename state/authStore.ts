@@ -4,15 +4,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export type TUser = {
   id: string
-  name: string
+  fullName: string
   email: string
+  bio: string
+  profilePicture: string
+  username: string
+  coverImage: string
 }
 
 export type TAuthStore = {
   isAuthenticated: boolean
   token: string | null
   user: TUser | null
-  login: (token: string) => void
+  login: (token: string, userData: TUser) => void
   logout: () => void
 }
 
@@ -22,7 +26,8 @@ const useAuthStore = create(
       isAuthenticated: false,
       user: null,
       token: null,
-      login: (token) => set({ isAuthenticated: true, token: token }),
+      login: (token, userData) =>
+        set({ isAuthenticated: true, token: token, user: userData }),
       logout: () => set({ isAuthenticated: false, user: null, token: null }),
     }),
     {
