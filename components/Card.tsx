@@ -1,9 +1,12 @@
+import type { TCommunityMember } from '@/state/communityStore'
 import { router } from 'expo-router'
 import { Avatar, Card, type CardProps, H3, Image, Paragraph, XStack } from 'tamagui'
 
 export type TDemoCardProps = CardProps & {
   title: string
   description: string
+  members: TCommunityMember[]
+  memberCount: number
 }
 
 export function DemoCard(props: TDemoCardProps) {
@@ -16,12 +19,11 @@ export function DemoCard(props: TDemoCardProps) {
       onPress={() => {
         router.push('/join-community')
       }}
+      w="$18"
     >
       <Card.Header padded>
         <H3>{props.title}</H3>
-        <Paragraph theme="alt2" maxWidth="50%">
-          {props.description}
-        </Paragraph>
+        <Paragraph theme="alt2">{props.description}</Paragraph>
       </Card.Header>
       <Card.Footer
         w="100%"
@@ -33,54 +35,29 @@ export function DemoCard(props: TDemoCardProps) {
       >
         <XStack ai="center" gap="$2">
           <XStack>
-            <Avatar
-              circular
-              size="$1.5"
-              zIndex={2}
-              borderColor="white"
-              borderWidth="$0.5"
-            >
-              <Avatar.Image
-                source={{
-                  uri: 'https://randomuser.me/api/portraits/women/27.jpg',
-                  height: 140,
-                }}
-              />
-              <Avatar.Fallback backgroundColor="$blue10" />
-            </Avatar>
-            <Avatar
-              circular
-              size="$1.5"
-              ml="$-2.5"
-              zIndex={1}
-              borderColor="white"
-              borderWidth="$0.5"
-            >
-              <Avatar.Image
-                source={{
-                  uri: 'https://randomuser.me/api/portraits/women/21.jpg',
-                  height: 140,
-                }}
-              />
-              <Avatar.Fallback backgroundColor="$pink10" />
-            </Avatar>
-            <Avatar
-              circular
-              size="$1.5"
-              ml="$-2.5"
-              borderColor="white"
-              borderWidth="$0.5"
-            >
-              <Avatar.Image
-                source={{
-                  uri: 'https://randomuser.me/api/portraits/men/27.jpg',
-                  height: 140,
-                }}
-              />
-              <Avatar.Fallback backgroundColor="$blue11" />
-            </Avatar>
+            {props.members.map((member, idx) => (
+              <Avatar
+                circular
+                size="$1.5"
+                zIndex={props.members.length - idx - 1}
+                key={member.id}
+                ml={idx == 0 ? '$0' : '$-2.5'}
+                borderColor="white"
+                borderWidth="$0.5"
+              >
+                <Avatar.Image
+                  source={{
+                    uri: 'https://randomuser.me/api/portraits/women/27.jpg',
+                    height: 140,
+                  }}
+                />
+                <Avatar.Fallback backgroundColor="$blue10" />
+              </Avatar>
+            ))}
           </XStack>
-          <Paragraph color="$white">200 members</Paragraph>
+          <Paragraph color="$white">
+            {props.memberCount} member{props.memberCount !== 1 && 's'}
+          </Paragraph>
         </XStack>
       </Card.Footer>
       <Card.Background>
