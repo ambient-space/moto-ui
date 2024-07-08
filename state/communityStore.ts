@@ -26,7 +26,7 @@ export type TCommunityMessage = {
   sentAt: string
 }
 
-export type TCommunity = {
+export type TCommunityOverview = {
   id: number
   name: string
   description: string
@@ -34,54 +34,29 @@ export type TCommunity = {
   isPrivate: boolean
   coverImage: string
   profilePicture: string
+  members: TCommunityMember[]
+  memberCount: number
 }
 
 export type TCommunityStore = {
-  communities: TCommunity[]
-  communityMembers: TCommunityMember[]
-  communityAnnouncements: TCommunityAnnouncement[]
-  communityMessages: TCommunityMessage[]
+  communities: TCommunityOverview[]
   fetchCommunities: () => void
-  fetchCommunityMembers: (communityId: number) => void
-  fetchCommunityAnnouncements: (communityId: number) => void
-  fetchCommunityMessages: (communityId: number) => void
 }
 
 export const useCommunityStore = create<TCommunityStore>((set) => ({
   communities: [],
-  communityMembers: [],
-  communityAnnouncements: [],
-  communityMessages: [],
   fetchCommunities: async () => {
     try {
-      const response = await client.get('/community', {
+      const response = await client.get('/community/overview', {
         headers: {
           Authorization: `Bearer ${useAuthStore.getState().token}`,
         },
       })
       const data = await response.data.data
+      console.debug('Communities:', data[1].members)
       set({ communities: data })
     } catch (e) {
       console.error(e)
     }
-  },
-  fetchCommunityMembers: async (communityId: number) => {
-    const response = await client.get(`/community/${communityId}/members`, {
-      headers: {
-        Authorization: `Bearer ${useAuthStore.getState().token}`,
-      },
-    })
-    const data = await response.data.data
-    set({ communityMembers: data })
-  },
-  fetchCommunityAnnouncements: async (communityId: number) => {
-    const response = await client.get(`/community/${communityId}/announcements`)
-    const data = await response.data.data
-    set({ communityAnnouncements: data })
-  },
-  fetchCommunityMessages: async (communityId: number) => {
-    const response = await client.get(`/community/${communityId}/messages`)
-    const data = await response.data.data
-    set({ communityMessages: data })
   },
 }))
