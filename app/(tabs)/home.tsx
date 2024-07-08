@@ -46,17 +46,16 @@ export default function HomeScreen() {
           </Button>
         </XStack>
         <ScrollView
-          backgroundColor={theme.background05}
           horizontal
           style={{ flexGrow: 0 }}
           px="$4"
           showsHorizontalScrollIndicator={false}
         >
-          <XStack gap="$4" pr="$4">
-            {trips.length > 0 &&
+          <XStack gap="$4" pr="$4" py="$2" backgroundColor="$colorTransparent">
+            {/* {trips.length > 0 &&
               trips.map((c) => (
                 <DemoCard key={c.id} title={c.name} description={c.description} />
-              ))}
+              ))} */}
           </XStack>
         </ScrollView>
         <Separator marginVertical={15} width="100%" px="$4" />
@@ -82,7 +81,13 @@ export default function HomeScreen() {
           <XStack gap="$4" pr="$4">
             {communities.length > 0 &&
               communities.map((c) => (
-                <DemoCard key={c.id} title={c.name} description={c.description} />
+                <DemoCard
+                  key={c.id}
+                  title={c.name}
+                  description={c.description}
+                  memberCount={c.memberCount}
+                  members={c.members}
+                />
               ))}
           </XStack>
         </ScrollView>
