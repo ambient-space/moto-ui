@@ -2,7 +2,7 @@ import { client } from '@/lib/axios'
 import { create } from 'zustand'
 import useAuthStore from './authStore'
 
-export type TTrip = {
+export type TTripOverview = {
   id: number
   communityId: number
   createdBy: string
@@ -14,6 +14,8 @@ export type TTrip = {
   endLocation: { lat: number; lng: number }
   route: { lat: number; lng: number }[]
   maxParticipants: number
+  participants: TTripParticipant[]
+  participantCount: number
 }
 
 export type TTripParticipant = {
@@ -24,10 +26,8 @@ export type TTripParticipant = {
 }
 
 export type TTripStore = {
-  trips: TTrip[]
-  tripParticipants: TTripParticipant[]
+  trips: TTripOverview[]
   fetchTrips: () => void
-  fetchTripParticipants: (tripId: number) => void
 }
 
 export const useTripStore = create<TTripStore>((set) => ({
@@ -35,26 +35,13 @@ export const useTripStore = create<TTripStore>((set) => ({
   tripParticipants: [],
   fetchTrips: async () => {
     try {
-      const response = await client.get('/trip', {
+      const response = await client.get('/trip/overview', {
         headers: {
           Authorization: `Bearer ${useAuthStore.getState().token}`,
         },
       })
       const data = await response.data.data
       set({ trips: data })
-    } catch (err: any) {
-      console.error(err)
-    }
-  },
-  fetchTripParticipants: async (tripId: number) => {
-    try {
-      const response = await client.get(`/trip/${tripId}/participants`, {
-        headers: {
-          Authorization: `Bearer ${useAuthStore.getState().token}`,
-        },
-      })
-      const data = await response.data.data
-      set({ tripParticipants: data })
     } catch (err: any) {
       console.error(err)
     }
