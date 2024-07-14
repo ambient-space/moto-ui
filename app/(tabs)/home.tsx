@@ -1,4 +1,4 @@
-import { DemoCard } from '@/components/Card'
+import { CommunityCard } from '@/components/CommunityCard'
 import { useCommunityStore } from '@/state/communityStore'
 import { useTripStore } from '@/state/tripStore'
 import { router } from 'expo-router'
@@ -8,17 +8,18 @@ import {
   H3,
   Paragraph,
   ScrollView,
-  Separator,
   Text,
   useTheme,
   XStack,
   YStack,
 } from 'tamagui'
+import { TripCard } from '@/components/TripCard'
 
 export default function HomeScreen() {
   const theme = useTheme()
   const communities = useCommunityStore((state) => state.communities)
   const trips = useTripStore((state) => state.trips)
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <YStack f={1} gap="$4" pt="$5" pb="$5">
@@ -45,20 +46,32 @@ export default function HomeScreen() {
             View more
           </Button>
         </XStack>
-        <ScrollView
-          horizontal
-          style={{ flexGrow: 0 }}
-          px="$4"
-          showsHorizontalScrollIndicator={false}
-        >
-          <XStack gap="$4" pr="$4" py="$2" backgroundColor="$colorTransparent">
-            {/* {trips.length > 0 &&
-              trips.map((c) => (
-                <DemoCard key={c.id} title={c.name} description={c.description} />
-              ))} */}
-          </XStack>
-        </ScrollView>
-        <Separator marginVertical={15} width="100%" px="$4" />
+        {trips.length > 0 ? (
+          <ScrollView
+            contentContainerStyle={{
+              backgroundColor: '$colorTransparent',
+            }}
+            horizontal
+            style={{ flexGrow: 0 }}
+            px="$4"
+            showsHorizontalScrollIndicator={false}
+          >
+            <XStack gap="$4" pr="$4">
+              {trips.length > 0 &&
+                trips.map((t) => (
+                  <TripCard
+                    key={t.id}
+                    title={t.name}
+                    description={t.description}
+                    participants={t.participants}
+                    participantCount={t.participantCount}
+                  />
+                ))}
+            </XStack>
+          </ScrollView>
+        ) : (
+          <Text px="$4">No trips found</Text>
+        )}
         <XStack gap="$4" ai="center" jc="space-between" px="$4">
           <H3 textAlign="left">Communities for you</H3>
           <Button
@@ -71,26 +84,35 @@ export default function HomeScreen() {
             View more
           </Button>
         </XStack>
-        <ScrollView
-          backgroundColor={theme.background05}
-          horizontal
-          style={{ flexGrow: 0 }}
-          px="$4"
-          showsHorizontalScrollIndicator={false}
-        >
-          <XStack gap="$4" pr="$4">
-            {communities.length > 0 &&
-              communities.map((c) => (
-                <DemoCard
+        {communities.length > 0 ? (
+          <ScrollView
+            contentContainerStyle={{
+              backgroundColor: '$colorTransparent',
+            }}
+            horizontal
+            style={{ flexGrow: 0 }}
+            px="$4"
+            showsHorizontalScrollIndicator={false}
+          >
+            <XStack gap="$4" pr="$4">
+              {communities.map((c) => (
+                <CommunityCard
                   key={c.id}
                   title={c.name}
                   description={c.description}
                   memberCount={c.memberCount}
                   members={c.members}
+                  w="$18"
+                  onPress={() => {
+                    router.push(`community/${c.id}`)
+                  }}
                 />
               ))}
-          </XStack>
-        </ScrollView>
+            </XStack>
+          </ScrollView>
+        ) : (
+          <Text px="$4">No communities found</Text>
+        )}
       </YStack>
     </ScrollView>
   )
