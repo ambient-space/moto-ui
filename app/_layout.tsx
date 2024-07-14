@@ -4,11 +4,10 @@ import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { router, SplashScreen, Stack } from 'expo-router'
 import { Provider } from './Provider'
-import useAuthStore from '@/state/authStore'
-import { useCommunityStore } from '@/state/communityStore'
-import { useTripStore } from '@/state/tripStore'
+import { Plus } from '@tamagui/lucide-icons'
+import { Button } from 'tamagui'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,22 +44,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const fetchCommunities = useCommunityStore((state) => state.fetchCommunities)
-  const fetchTrips = useTripStore((state) => state.fetchTrips)
 
-  useEffect(() => {
-    ;(async () => {
-      if (isAuthenticated) {
-        try {
-          fetchCommunities()
-          fetchTrips()
-        } catch (e) {
-          console.error(e)
-        }
-      }
-    })()
-  }, [isAuthenticated])
   return (
     <Provider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -85,8 +69,10 @@ function RootLayoutNav() {
               headerStyle: {
                 backgroundColor: 'transparent',
               },
-              headerTransparent: true,
               headerTitle: 'Explore Trips',
+              headerSearchBarOptions: {
+                placeholder: 'Search for trips',
+              },
             }}
           />
           <Stack.Screen
@@ -94,13 +80,28 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               headerTitle: 'Explore Communities',
+              headerRight: () => (
+                <Button
+                  unstyled
+                  onPress={() => {
+                    router.push('/create-community')
+                  }}
+                >
+                  <Plus />
+                </Button>
+              ),
+              headerSearchBarOptions: {
+                placeholder: 'Search for communities',
+                onSearchButtonPress: () => {
+                  console.debug('Search button pressed')
+                },
+              },
             }}
           />
           <Stack.Screen
             name="profile"
             options={{
               headerBackTitleVisible: false,
-              headerTransparent: true,
               headerTitle: '',
             }}
           />
@@ -108,17 +109,22 @@ function RootLayoutNav() {
             name="join-community"
             options={{
               headerBackTitleVisible: false,
-              headerTransparent: true,
               headerTitle: '',
             }}
           />
           <Stack.Screen name="navigation" />
           <Stack.Screen
-            name="community-info"
+            name="community"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="create-community"
             options={{
               headerBackTitleVisible: false,
+              headerTitle: 'Create Community',
               headerTransparent: true,
-              headerTitle: '',
             }}
           />
         </Stack>
