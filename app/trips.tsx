@@ -1,4 +1,4 @@
-import { DemoCard } from '@/components/Card'
+import { TripCard } from '@/components/TripCard'
 import { useTripStore } from '@/state/tripStore'
 import { SafeAreaView } from 'react-native'
 import { Input, ScrollView, YStack } from 'tamagui'
@@ -12,12 +12,14 @@ export default function TripsScreen() {
 
         <YStack gap="$2" mx="$2">
           {trips.length > 0 &&
-            trips.map((c) => (
-              <DemoCard key={c.id} title={c.name} description={c.description} />
-            ))}
-          {trips.length > 0 &&
-            trips.map((c) => (
-              <DemoCard key={c.id} title={c.name} description={c.description} />
+            trips.map((t) => (
+              <TripCard
+                key={t.id}
+                title={t.name}
+                description={t.description}
+                participants={t.participants}
+                participantCount={t.participantCount}
+              />
             ))}
         </YStack>
       </ScrollView>
