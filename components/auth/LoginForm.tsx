@@ -88,6 +88,7 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
           w="100%"
           automaticallyAdjustKeyboardInsets
           showsVerticalScrollIndicator={false}
+          keyboardDismissMode="on-drag"
         >
           <Form onSubmit={handleSubmit(handleLogin)}>
             <Controller
