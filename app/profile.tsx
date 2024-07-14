@@ -15,7 +15,7 @@ export default function ProfileScreen() {
           <Image
             source={{
               uri:
-                user.coverImage ||
+                user.profile.coverImage ||
                 'https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg',
               height: 140,
             }}
@@ -31,17 +31,21 @@ export default function ProfileScreen() {
             >
               <Avatar.Image
                 source={{
-                  uri: user.profilePicture,
+                  uri: user.profile.profilePicture,
                   height: 140,
                 }}
               />
               <Avatar.Fallback />
             </Avatar>
             <YStack ai="center" gap="$2">
-              {user.fullName.length > 0 && <H3 mb="$-3">{user.fullName}</H3>}
+              {user.profile.fullName.length > 0 && (
+                <H3 mb="$-3">{user.profile.fullName}</H3>
+              )}
               <Paragraph color="$color05">@{user.username}</Paragraph>
               <Text textAlign="center">
-                {user.bio.length > 0 ? user.bio : 'This user has not added a bio.'}
+                {user.profile.bio.length > 0
+                  ? user.profile.bio
+                  : 'This user has not added a bio.'}
               </Text>
             </YStack>
             <Button size="$3" mt="$4" w="100%" backgroundColor="$blue8">
