@@ -4,12 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export type TUser = {
   id: string
-  fullName: string
   email: string
-  bio: string
-  profilePicture: string
   username: string
-  coverImage: string
+  profile: {
+    fullName: string
+    bio: string
+    profilePicture: string
+    coverImage: string
+  }
 }
 
 export type TAuthStore = {
