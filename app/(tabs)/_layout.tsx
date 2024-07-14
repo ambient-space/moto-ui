@@ -1,8 +1,25 @@
 import { router, Tabs } from 'expo-router'
 import { Avatar, Button, XStack } from 'tamagui'
 import { Bell, Cog, Home, UserCircle } from '@tamagui/lucide-icons'
+import { useEffect } from 'react'
+import { useCommunityStore } from '@/state/communityStore'
+import { useTripStore } from '@/state/tripStore'
 
 export default function MainLayout() {
+  const fetchCommunities = useCommunityStore((state) => state.fetchCommunities)
+  const fetchTrips = useTripStore((state) => state.fetchTrips)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        fetchCommunities()
+        fetchTrips()
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [])
+
   return (
     <Tabs
       screenOptions={{
