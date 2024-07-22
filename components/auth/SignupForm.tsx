@@ -1,4 +1,4 @@
-import { Button, Card, Form, H2, Paragraph, ScrollView, View } from 'tamagui'
+import { Button, Card, Form, H2, Paragraph, View } from 'tamagui'
 import InputComponent from '../Form/Input'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
@@ -94,114 +94,107 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
     >
       <H2>Sign up for an account</H2>
       <Card p="$4" h="max-content" mb="$8" pb="$10">
-        <ScrollView
-          w="100%"
-          automaticallyAdjustKeyboardInsets
-          showsVerticalScrollIndicator={false}
-          keyboardDismissMode="on-drag"
-        >
-          <Form onSubmit={handleSubmit(handleSignup)}>
-            <Controller
-              control={control}
-              name="username"
-              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-                <InputComponent
-                  id="username_signup"
-                  label="Username"
-                  inputProps={{
-                    placeholder: 'johndoe',
-                    value,
-                    onBlur,
-                    onChangeText: onChange,
-                    autoCapitalize: 'none',
-                    borderColor: error ? 'red' : undefined,
-                  }}
-                  message={error?.message}
-                  messageProps={{
-                    color: 'red',
-                  }}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-                <InputComponent
-                  id="email_signup"
-                  label="Email"
-                  inputProps={{
-                    placeholder: 'johndoe@doemail.com',
-                    value,
-                    onBlur,
-                    onChangeText: onChange,
-                    autoCapitalize: 'none',
-                    keyboardType: 'email-address',
-                    borderColor: error ? 'red' : undefined,
-                  }}
-                  message={error?.message}
-                  messageProps={{
-                    color: 'red',
-                  }}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-                <InputComponent
-                  id="password_signup"
-                  label="Password"
-                  inputProps={{
-                    placeholder: 'Password123',
-                    secureTextEntry: true,
-                    value,
-                    onBlur,
-                    onChangeText: onChange,
-                    borderColor: error ? 'red' : undefined,
-                  }}
-                  message={error?.message}
-                  messageProps={{
-                    color: 'red',
-                  }}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-                <InputComponent
-                  id="confirmPassword_signup"
-                  label="Confirm Password"
-                  inputProps={{
-                    placeholder: 'Password123',
-                    secureTextEntry: true,
-                    value,
-                    onBlur,
-                    onChangeText: onChange,
-                    borderColor: error ? 'red' : undefined,
-                  }}
-                  message={error?.message}
-                  messageProps={{
-                    color: 'red',
-                  }}
-                />
-              )}
-            />
-            {errors.root && <Paragraph color="red">{errors.root.message}</Paragraph>}
+        <Form onSubmit={handleSubmit(handleSignup)}>
+          <Controller
+            control={control}
+            name="username"
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <InputComponent
+                id="username_signup"
+                label="Username"
+                inputProps={{
+                  placeholder: 'johndoe',
+                  value,
+                  onBlur,
+                  onChangeText: onChange,
+                  autoCapitalize: 'none',
+                  borderColor: error ? 'red' : undefined,
+                }}
+                message={error?.message}
+                messageProps={{
+                  color: 'red',
+                }}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <InputComponent
+                id="email_signup"
+                label="Email"
+                inputProps={{
+                  placeholder: 'johndoe@doemail.com',
+                  value,
+                  onBlur,
+                  onChangeText: onChange,
+                  autoCapitalize: 'none',
+                  keyboardType: 'email-address',
+                  borderColor: error ? 'red' : undefined,
+                }}
+                message={error?.message}
+                messageProps={{
+                  color: 'red',
+                }}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <InputComponent
+                id="password_signup"
+                label="Password"
+                inputProps={{
+                  placeholder: 'Password123',
+                  secureTextEntry: true,
+                  value,
+                  onBlur,
+                  onChangeText: onChange,
+                  borderColor: error ? 'red' : undefined,
+                }}
+                message={error?.message}
+                messageProps={{
+                  color: 'red',
+                }}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+              <InputComponent
+                id="confirmPassword_signup"
+                label="Confirm Password"
+                inputProps={{
+                  placeholder: 'Password123',
+                  secureTextEntry: true,
+                  value,
+                  onBlur,
+                  onChangeText: onChange,
+                  borderColor: error ? 'red' : undefined,
+                }}
+                message={error?.message}
+                messageProps={{
+                  color: 'red',
+                }}
+              />
+            )}
+          />
+          {errors.root && <Paragraph color="red">{errors.root.message}</Paragraph>}
 
-            <Form.Trigger asChild>
-              <Button w="100%" mt="$2">
-                Sign up
-              </Button>
-            </Form.Trigger>
-            <Button unstyled w="100%" textAlign="center" mt="$4" onPress={handleLogin}>
-              Already have an account? Sign In
+          <Form.Trigger asChild>
+            <Button w="100%" mt="$2">
+              Sign up
             </Button>
-          </Form>
-        </ScrollView>
+          </Form.Trigger>
+          <Button unstyled w="100%" textAlign="center" mt="$4" onPress={handleLogin}>
+            Already have an account? Sign In
+          </Button>
+        </Form>
       </Card>
     </View>
   )
