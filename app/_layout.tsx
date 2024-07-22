@@ -70,6 +70,16 @@ function RootLayoutNav() {
                 backgroundColor: 'transparent',
               },
               headerTitle: 'Explore Trips',
+              headerRight: () => (
+                <Button
+                  unstyled
+                  onPress={() => {
+                    router.push('/create-trip')
+                  }}
+                >
+                  <Plus />
+                </Button>
+              ),
               headerSearchBarOptions: {
                 placeholder: 'Search for trips',
               },
@@ -115,6 +125,12 @@ function RootLayoutNav() {
           <Stack.Screen name="navigation" />
           <Stack.Screen
             name="community"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="trip"
             options={{
               headerShown: false,
             }}
