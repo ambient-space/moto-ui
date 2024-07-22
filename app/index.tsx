@@ -4,7 +4,7 @@ import useAuthStore from '@/state/authStore'
 import { Redirect } from 'expo-router'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native'
-import { AnimatePresence, View } from 'tamagui'
+import { AnimatePresence, ScrollView } from 'tamagui'
 
 export default function Auth() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -13,7 +13,16 @@ export default function Auth() {
   if (isAuthenticated) return <Redirect href="/home" />
   return (
     <SafeAreaView>
-      <View h="100%" jc="flex-end">
+      <ScrollView
+        contentContainerStyle={{
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+        automaticallyAdjustKeyboardInsets
+        showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"
+      >
         <AnimatePresence exitBeforeEnter>
           {showLogin ? (
             <LoginForm key="login" handleSignUp={() => setShowLogin(false)} />
@@ -21,7 +30,7 @@ export default function Auth() {
             <SignupForm key="signup" handleLogin={() => setShowLogin(true)} />
           )}
         </AnimatePresence>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
