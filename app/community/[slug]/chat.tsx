@@ -33,6 +33,7 @@ export default function CommunityChat() {
     })()
   }, [slug])
 
+  // Update the chat with the last message received
   useEffect(() => {
     if (lastMessage) {
       setMessages((previousMessages) =>
@@ -40,21 +41,6 @@ export default function CommunityChat() {
       )
     }
   }, [lastMessage])
-
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'This is a system message',
-        createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
-        system: true,
-        user: {
-          _id: 1,
-        },
-        // Any additional custom parameters are passed through
-      },
-    ])
-  }, [])
 
   const onSend = useCallback(
     (messages: IMessage[] = []) => {
@@ -81,7 +67,6 @@ export default function CommunityChat() {
             name: user.profile.fullName,
             // avatar: user.profile.profilePicture,
           }}
-          textInputProps={{}}
         />
       </View>
     </SafeAreaView>
