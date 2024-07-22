@@ -4,25 +4,45 @@ import useAuthStore from './authStore'
 
 export type TTripOverview = {
   id: number
+  name: string
+  description: string
+  startDate: string
+  // startLocation: { lat: number; lng: number }
+  // endLocation: { lat: number; lng: number }
+  startLocation: string
+  participants: TTripParticipant[]
+  participantCount: number
+}
+
+export type TTripDetails = {
+  id: number
   communityId: number
   createdBy: string
   name: string
   description: string
   startDate: string
   endDate: string
-  startLocation: { lat: number; lng: number }
-  endLocation: { lat: number; lng: number }
+  // startLocation: { lat: number; lng: number }
+  // endLocation: { lat: number; lng: number }
+  startLocation: string
+  endLocation: string
   route: { lat: number; lng: number }[]
   maxParticipants: number
-  participants: TTripParticipant[]
+  participants: (TTripParticipant & {
+    profile: {
+      fullName: string
+      profilePicture: string
+    }
+  })[]
   participantCount: number
 }
 
 export type TTripParticipant = {
   id: number
   tripId: number
-  userId: number
+  userId: string
   status: 'confirmed' | 'pending' | 'declined'
+  role: string
 }
 
 export type TTripStore = {
