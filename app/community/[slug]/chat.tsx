@@ -1,8 +1,7 @@
-import { ChevronDown } from '@tamagui/lucide-icons'
 import { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { GiftedChat, type IMessage } from 'react-native-gifted-chat'
-import { Accordion, Paragraph, Square, View } from 'tamagui'
+import { View } from 'tamagui'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import useAuthStore from '@/state/authStore'
 import { useLocalSearchParams } from 'expo-router'
@@ -72,37 +71,6 @@ export default function CommunityChat() {
   return (
     <SafeAreaView>
       <View h="100%">
-        <Accordion overflow="hidden" type="multiple" w="100%">
-          <Accordion.Item value="a1" position="relative">
-            <Accordion.Trigger flexDirection="row" justifyContent="space-between">
-              {({
-                open,
-              }: {
-                open: boolean
-              }) => (
-                <>
-                  <Paragraph>1. Take a cold shower</Paragraph>
-                  <Square animation="quick" rotate={open ? '180deg' : '0deg'}>
-                    <ChevronDown size="$1" />
-                  </Square>
-                </>
-              )}
-            </Accordion.Trigger>
-            <Accordion.HeightAnimator animation="medium">
-              <Accordion.Content
-                animation="medium"
-                position="absolute"
-                exitStyle={{ opacity: 0 }}
-              >
-                <Paragraph>
-                  Cold showers can help reduce inflammation, relieve pain, improve
-                  circulation, lower stress levels, and reduce muscle soreness and
-                  fatigue.
-                </Paragraph>
-              </Accordion.Content>
-            </Accordion.HeightAnimator>
-          </Accordion.Item>
-        </Accordion>
         <GiftedChat
           messages={messages}
           renderUsernameOnMessage
