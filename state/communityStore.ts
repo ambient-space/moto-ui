@@ -6,7 +6,7 @@ import type { TTripOverview } from './tripStore'
 
 export type TCommunityMember = {
   id: number
-  userId: number
+  userId: string
   communityId: number
   role: 'admin' | 'member'
 }
