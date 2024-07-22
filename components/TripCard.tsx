@@ -1,19 +1,50 @@
 import type { TTripParticipant } from '@/state/tripStore'
-import { Avatar, Card, type CardProps, H3, Image, Paragraph, XStack } from 'tamagui'
+import { Calendar, Map as MapIcon } from '@tamagui/lucide-icons'
+import {
+  Avatar,
+  Card,
+  type CardProps,
+  H3,
+  Image,
+  Paragraph,
+  XStack,
+  YStack,
+} from 'tamagui'
 
 export type TTripCardProps = CardProps & {
   title: string
   description: string
   participants: TTripParticipant[]
   participantCount: number
+  startLocation: string
+  startDate: string
 }
 
 export function TripCard(props: TTripCardProps) {
   return (
-    <Card elevate size="$4" bordered shadowOpacity={0} {...props}>
-      <Card.Header padded>
-        <H3>{props.title}</H3>
-        <Paragraph theme="alt2">{props.description}</Paragraph>
+    <Card elevate bordered shadowOpacity={0} {...props}>
+      <Card.Header>
+        <YStack display="flex" width="$20" jc="space-between">
+          <YStack>
+            <H3 textOverflow="ellipsis" numberOfLines={1}>
+              {props.title}
+            </H3>
+
+            <Paragraph theme="alt2" textOverflow="ellipsis" numberOfLines={2}>
+              {props.description}
+            </Paragraph>
+          </YStack>
+          <YStack>
+            <XStack gap="$2" ai="center">
+              <MapIcon color="$color05" size={16} />
+              <Paragraph theme="alt2">{props.startLocation}</Paragraph>
+            </XStack>
+            <XStack gap="$2" ai="center">
+              <Calendar color="$color05" size={16} />
+              <Paragraph theme="alt2">{props.startDate}</Paragraph>
+            </XStack>
+          </YStack>
+        </YStack>
       </Card.Header>
       <Card.Footer
         w="100%"
@@ -37,7 +68,7 @@ export function TripCard(props: TTripCardProps) {
               >
                 <Avatar.Image
                   source={{
-                    uri: 'https://randomuser.me/api/portraits/women/27.jpg',
+                    uri: 'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg',
                     height: 140,
                   }}
                 />
