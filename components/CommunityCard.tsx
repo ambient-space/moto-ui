@@ -37,7 +37,7 @@ export function CommunityCard(props: TCommunityCardProps) {
               >
                 <Avatar.Image
                   source={{
-                    uri: 'https://randomuser.me/api/portraits/women/27.jpg',
+                    uri: 'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg',
                     height: 140,
                   }}
                 />
