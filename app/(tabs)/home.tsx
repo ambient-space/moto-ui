@@ -2,23 +2,18 @@ import { CommunityCard } from '@/components/CommunityCard'
 import { useCommunityStore } from '@/state/communityStore'
 import { useTripStore } from '@/state/tripStore'
 import { router } from 'expo-router'
-import {
-  Button,
-  H1,
-  H3,
-  Paragraph,
-  ScrollView,
-  Text,
-  useTheme,
-  XStack,
-  YStack,
-} from 'tamagui'
+import { Button, H1, H3, Paragraph, ScrollView, Text, XStack, YStack } from 'tamagui'
 import { TripCard } from '@/components/TripCard'
+import { useEffect } from 'react'
 
 export default function HomeScreen() {
-  const theme = useTheme()
-  const communities = useCommunityStore((state) => state.communities)
-  const trips = useTripStore((state) => state.trips)
+  const { communities, fetchCommunities } = useCommunityStore((state) => state)
+  const { trips, fetchTrips } = useTripStore((state) => state)
+
+  useEffect(() => {
+    fetchTrips()
+    fetchCommunities()
+  }, [])
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -62,9 +57,14 @@ export default function HomeScreen() {
                   <TripCard
                     key={t.id}
                     title={t.name}
+                    startDate={new Date(t.startDate).toLocaleString()}
+                    startLocation={t.startLocation}
                     description={t.description}
                     participants={t.participants}
                     participantCount={t.participantCount}
+                    onPress={() => {
+                      router.push(`trip/${t.id}`)
+                    }}
                   />
                 ))}
             </XStack>
