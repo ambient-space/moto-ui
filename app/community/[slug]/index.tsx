@@ -30,7 +30,7 @@ export default function CommunityInfoScreen() {
 
   return (
     <SafeAreaView>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} height="100%">
         <YStack>
           <Image
             source={{
@@ -81,6 +81,8 @@ export default function CommunityInfoScreen() {
                       description={t.description}
                       participants={t.participants}
                       participantCount={t.participantCount}
+                      startDate={new Date(t.startDate).toLocaleString()}
+                      startLocation={t.startLocation}
                     />
                   ))}
                 </XStack>
@@ -96,7 +98,7 @@ export default function CommunityInfoScreen() {
               overflow="hidden"
               mt="$2"
               backgroundColor="$gray2"
-              p="$4"
+              p="$2"
               borderRadius="$2"
             >
               <YStack gap="$2">
@@ -111,7 +113,9 @@ export default function CommunityInfoScreen() {
                     >
                       <Avatar.Image
                         source={{
-                          uri: member.profile.profilePicture,
+                          uri:
+                            member.profile.profilePicture ||
+                            'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg',
                           height: 140,
                         }}
                       />
