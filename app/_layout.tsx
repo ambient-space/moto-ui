@@ -4,10 +4,11 @@ import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { router, SplashScreen, Stack } from 'expo-router'
+import { SplashScreen, Stack, useGlobalSearchParams, useRouter } from 'expo-router'
 import { Provider } from './Provider'
 import { Plus } from '@tamagui/lucide-icons'
 import { Button } from 'tamagui'
+import Actions from '@/components/community/Actions'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,6 +45,9 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
+
+  const router = useRouter()
+  const params = useGlobalSearchParams()
 
   return (
     <Provider>
@@ -124,9 +128,19 @@ function RootLayoutNav() {
           />
           <Stack.Screen name="navigation" />
           <Stack.Screen
-            name="community"
+            name="community/[slug]/index"
             options={{
-              headerShown: false,
+              // headerShown: false,
+              title: '',
+              headerBackTitleVisible: false,
+              headerRight: () => <Actions />,
+            }}
+          />
+          <Stack.Screen
+            name="community/[slug]/chat"
+            options={{
+              headerBackTitleVisible: false,
+              title: params.title as string,
             }}
           />
           <Stack.Screen
