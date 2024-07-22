@@ -42,7 +42,7 @@ export type TTripParticipant = {
   tripId: number
   userId: string
   status: 'confirmed' | 'pending' | 'declined'
-  role: string
+  role: 'organizer' | 'participant'
 }
 
 export type TTripStore = {
