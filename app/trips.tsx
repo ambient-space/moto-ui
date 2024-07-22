@@ -1,28 +1,34 @@
 import { TripCard } from '@/components/TripCard'
 import { useTripStore } from '@/state/tripStore'
-import { SafeAreaView } from 'react-native'
-import { Input, ScrollView, YStack } from 'tamagui'
+import { router } from 'expo-router'
+import { FlatList, SafeAreaView } from 'react-native'
+import { YStack } from 'tamagui'
 
 export default function TripsScreen() {
   const trips = useTripStore((state) => state.trips)
   return (
     <SafeAreaView>
-      <ScrollView h="100%">
-        <Input mx="$2" my="$5" placeholder="Search for trips" />
-
-        <YStack gap="$2" mx="$2">
-          {trips.length > 0 &&
-            trips.map((t) => (
-              <TripCard
-                key={t.id}
-                title={t.name}
-                description={t.description}
-                participants={t.participants}
-                participantCount={t.participantCount}
-              />
-            ))}
-        </YStack>
-      </ScrollView>
+      <YStack gap="$2" mx="$2">
+        <FlatList
+          style={{ width: '100%', height: '100%' }}
+          data={trips}
+          contentContainerStyle={{ gap: 8 }}
+          renderItem={({ item: t }) => (
+            <TripCard
+              key={t.id}
+              title={t.name}
+              startDate={new Date(t.startDate).toLocaleString()}
+              startLocation={t.startLocation}
+              description={t.description}
+              participants={t.participants}
+              participantCount={t.participantCount}
+              onPress={() => {
+                router.push(`trip/${t.id}`)
+              }}
+            />
+          )}
+        />
+      </YStack>
     </SafeAreaView>
   )
 }
