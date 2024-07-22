@@ -1,12 +1,12 @@
+import MemberCard from '@/components/MemberCard'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TTripDetails } from '@/state/tripStore'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
-  Avatar,
   Text,
   YStack,
   XStack,
@@ -52,6 +52,7 @@ export default function TripInfoScreen() {
     })
 
     if (!res.data.error) {
+      router.setParams({ slug: slug as string })
       setTrip(res.data.data)
     }
   }
@@ -93,36 +94,39 @@ export default function TripInfoScreen() {
 
               <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
                 <Paragraph fontSize="$3" color="$color05">
-                  Start Location
+                  Location
                 </Paragraph>
-                <Paragraph fontWeight="bold">{trip.startLocation}</Paragraph>
+                <XStack>
+                  <Paragraph fontSize="$2">From </Paragraph>
+                  <Paragraph fontWeight="bold">{trip.startLocation}</Paragraph>
+                </XStack>
+                {trip.endLocation && (
+                  <XStack>
+                    <Paragraph fontSize="$2">To </Paragraph>
+                    <Paragraph fontWeight="bold">{trip.endLocation}</Paragraph>
+                  </XStack>
+                )}
               </YStack>
-
-              {trip.endLocation && (
-                <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                  <Paragraph>End Location</Paragraph>
-                  <Paragraph fontWeight="bold">{trip.endLocation}</Paragraph>
-                </YStack>
-              )}
 
               <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
                 <Paragraph fontSize="$3" color="$color05">
-                  Starts At
+                  Date
                 </Paragraph>
-                <Paragraph fontWeight="bold">
-                  {new Date(trip.startDate).toLocaleString()}
-                </Paragraph>
-              </YStack>
-              {trip.endDate && (
-                <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                  <Paragraph fontSize="$3" color="$color05">
-                    Ends At
-                  </Paragraph>
+                <XStack>
+                  <Paragraph fontSize="$2">From </Paragraph>
                   <Paragraph fontWeight="bold">
-                    {new Date(trip.endDate).toLocaleString()}
+                    {new Date(trip.startDate).toLocaleString()}
                   </Paragraph>
-                </YStack>
-              )}
+                </XStack>
+                {trip.endDate && (
+                  <XStack>
+                    <Paragraph fontSize="$2">To </Paragraph>
+                    <Paragraph fontWeight="bold">
+                      {new Date(trip.endDate).toLocaleString()}
+                    </Paragraph>
+                  </XStack>
+                )}
+              </YStack>
 
               <H4>Participants</H4>
               <ScrollView
@@ -136,29 +140,17 @@ export default function TripInfoScreen() {
               >
                 <YStack gap="$2">
                   {trip.participants.map((member) => (
-                    <XStack gap="$2" ai="center" key={member.id}>
-                      <Avatar
-                        circular
-                        size="$4"
-                        zIndex={2}
-                        borderColor="white"
-                        borderWidth="$0.5"
-                      >
-                        <Avatar.Image
-                          source={{
-                            uri:
-                              member.profile.profilePicture ||
-                              'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg',
-                            height: 140,
-                          }}
-                        />
-                        <Avatar.Fallback backgroundColor="$blue10" />
-                      </Avatar>
-                      <YStack>
-                        <Text fontSize={16}>{member.profile.fullName || 'New User'}</Text>
-                        <Text fontSize={12}>{member.role}</Text>
-                      </YStack>
-                    </XStack>
+                    <MemberCard
+                      key={member.userId}
+                      member={{
+                        id: member.userId,
+                        profile: {
+                          profilePicture: member.profile.profilePicture,
+                          fullName: member.profile.fullName,
+                        },
+                        role: member.role,
+                      }}
+                    />
                   ))}
                 </YStack>
               </ScrollView>
