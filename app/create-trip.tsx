@@ -92,7 +92,8 @@ export default function CreateTrips() {
         <SafeAreaView style={{ flexGrow: 1 }}>
           <ScrollView
             keyboardDismissMode="on-drag"
-            p="$2"
+            py="$2"
+            px="$3"
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               display: 'flex',
@@ -193,6 +194,7 @@ export default function CreateTrips() {
 
             <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
               <DatePickerInput
+                id="startDate"
                 name="startDate"
                 required
                 control={control}
@@ -204,6 +206,7 @@ export default function CreateTrips() {
               />
               <Separator />
               <DatePickerInput
+                id="endDate"
                 name="endDate"
                 control={control}
                 label="End Date"
