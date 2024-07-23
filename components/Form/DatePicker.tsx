@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Keyboard, Platform } from 'react-native'
+import { Keyboard, Platform, SafeAreaView } from 'react-native'
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form'
 import DateTimePicker, {
   type DateTimePickerEvent,
   type DatePickerOptions,
 } from '@react-native-community/datetimepicker'
-import { Input, View, Text, Sheet, Button, YStack, XStack } from 'tamagui'
+import { Input, View, Text, Sheet, Button, YStack, XStack, Label } from 'tamagui'
+import { X } from '@tamagui/lucide-icons'
 
 type TDatePickerInputProps<T extends FieldValues> = {
   name: Path<T>
+  id: string
   control: Control<T>
   label: string
   datePickerProps?: Omit<DatePickerOptions, 'value' | 'mode' | 'onChange'>
@@ -18,6 +20,7 @@ type TDatePickerInputProps<T extends FieldValues> = {
 
 const DatePickerInput = <T extends FieldValues>({
   name,
+  id,
   control,
   label,
   datePickerProps,
@@ -49,11 +52,19 @@ const DatePickerInput = <T extends FieldValues>({
       <YStack py="$1">
         {variant === 'default' ? (
           <>
-            <Text>
+            <Label
+              htmlFor={id}
+              unstyled
+              onPress={() => {
+                Keyboard.dismiss()
+                setIsOpen(true)
+              }}
+            >
               {label}
               {required ? '*' : ''}
-            </Text>
+            </Label>
             <Input
+              id={id}
               value={value ? new Date(value).toLocaleString() : ''}
               onPressIn={() => {
                 Keyboard.dismiss()
@@ -65,11 +76,21 @@ const DatePickerInput = <T extends FieldValues>({
           </>
         ) : (
           <XStack gap="$4" jc="space-between" ai="baseline">
-            <Text color="$color05" fontSize="$4">
+            <Label
+              color="$color05"
+              fontSize="$4"
+              onPress={() => {
+                Keyboard.dismiss()
+                setIsOpen(true)
+              }}
+              unstyled
+              htmlFor={id}
+            >
               {label}
               {required ? '*' : ''}
-            </Text>
+            </Label>
             <Input
+              id={id}
               value={value ? new Date(value).toLocaleString() : ''}
               onPressIn={() => {
                 Keyboard.dismiss()
@@ -98,18 +119,36 @@ const DatePickerInput = <T extends FieldValues>({
         dismissOnSnapToBottom
       >
         <Sheet.Overlay />
-        <Sheet.Frame alignItems="center" justifyContent="center">
+        <Sheet.Frame alignItems="center" justifyContent="center" p="$4">
           <Sheet.Handle />
-          <DateTimePicker
-            value={value ? new Date(value) : new Date()}
-            mode="datetime"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleConfirm}
-            {...datePickerProps}
-          />
-          <Button onPress={handleClose} disabled={!value} marginTop="$4">
-            Confirm
-          </Button>
+          <SafeAreaView>
+            <XStack jc="flex-end" w="100%">
+              <Button icon={X} h="0" p="$2" borderRadius="$12" onPress={handleClose} />
+            </XStack>
+            <DateTimePicker
+              value={value ? new Date(value) : new Date()}
+              mode="datetime"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleConfirm}
+              {...datePickerProps}
+            />
+            <XStack gap="$2" jc="center">
+              <Button
+                onPress={() => {
+                  onChange(null)
+                  handleClose()
+                }}
+                variant="outlined"
+                disabled={!value}
+                marginTop="$4"
+              >
+                Clear
+              </Button>
+              <Button onPress={handleClose} disabled={!value} marginTop="$4">
+                Confirm
+              </Button>
+            </XStack>
+          </SafeAreaView>
         </Sheet.Frame>
       </Sheet>
     </View>
