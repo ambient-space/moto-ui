@@ -60,7 +60,7 @@ export default function ProfileScreen() {
               {user.fullName.length > 0 && <H3 mb="$-3">{user.fullName}</H3>}
               <Paragraph color="$color05">@{user.authUser.username}</Paragraph>
               <Text textAlign="center">
-                {user.bio.length > 0 ? user.bio : 'You have not added a bio.'}
+                {user.bio && user.bio.length > 0 ? user.bio : 'You have not added a bio.'}
               </Text>
             </YStack>
           </YStack>
