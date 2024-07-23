@@ -12,14 +12,17 @@ import {
   ScrollView,
   Separator,
   Switch,
+  View,
   VisuallyHidden,
   XStack,
+  YStack,
 } from 'tamagui'
 import { z } from 'zod'
 import * as ImagePicker from 'expo-image-picker'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import { router } from 'expo-router'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const CreateCommunityFormSchema = z.object({
   name: z.string({ message: 'required' }).min(3, 'Name must be at least 3 characters'),
@@ -50,6 +53,7 @@ export default function CreateCommunity() {
   const token = useAuthStore((state) => state.token)
   const watchCover = watch('cover')
   const watchAvatar = watch('avatar')
+  const insets = useSafeAreaInsets()
 
   const onSubmit = async (data: typeof CreateCommunityFormSchema._type) => {
     try {
@@ -81,43 +85,44 @@ export default function CreateCommunity() {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView
-        keyboardDismissMode="on-drag"
-        p="$2"
-        contentContainerStyle={{
-          height: '100%',
-        }}
-      >
-        <Image
-          source={{
-            uri:
-              watchCover ||
-              'https://coltonconcrete.co.uk/wp-content/uploads/2021/10/placeholder1.jpg',
-            height: 140,
-          }}
-          borderRadius="$2"
-        />
-        <Form onSubmit={handleSubmit(onSubmit)} gap="$2" px="$2">
-          <Avatar
-            size="$8"
-            mt="$-10"
-            borderRadius="$2"
-            borderColor="white"
-            borderWidth="$1"
-            backgroundColor="$blue10"
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <YStack jc="space-between" h="100%">
+        <SafeAreaView style={{ flexGrow: 1 }}>
+          <ScrollView
+            keyboardDismissMode="on-drag"
+            p="$2"
+            contentContainerStyle={{
+              display: 'flex',
+              gap: 12,
+            }}
           >
-            <Avatar.Image
+            <Image
               source={{
                 uri:
-                  watchAvatar ||
+                  watchCover ||
                   'https://coltonconcrete.co.uk/wp-content/uploads/2021/10/placeholder1.jpg',
                 height: 140,
               }}
+              borderRadius="$2"
             />
-            <Avatar.Fallback />
-          </Avatar>
-          <XStack gap="$2">
+            <Avatar
+              size="$8"
+              mt="$-10"
+              borderRadius="$2"
+              borderColor="white"
+              borderWidth="$1"
+              backgroundColor="$blue10"
+            >
+              <Avatar.Image
+                source={{
+                  uri:
+                    watchAvatar ||
+                    'https://coltonconcrete.co.uk/wp-content/uploads/2021/10/placeholder1.jpg',
+                  height: 140,
+                }}
+              />
+              <Avatar.Fallback />
+            </Avatar>
             <Controller
               name="cover"
               control={control}
@@ -164,89 +169,106 @@ export default function CreateCommunity() {
                 </VisuallyHidden>
               )}
             />
-
-            <Button size="$3" onPress={() => pickImage('avatar')}>
-              Change Avatar
-            </Button>
-            <Button size="$3" onPress={() => pickImage('cover')}>
-              Change Cover Photo
-            </Button>
-          </XStack>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="name"
-                label="Name"
-                inputProps={{
-                  placeholder: 'Riding Community',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
+            <XStack gap="$2" p="$2" backgroundColor="$gray2" borderRadius="$4">
+              <Button size="$3" onPress={() => pickImage('avatar')}>
+                Change Avatar
+              </Button>
+              <Button size="$3" onPress={() => pickImage('cover')}>
+                Change Cover Photo
+              </Button>
+            </XStack>
+            <YStack gap="$2" p="$2" backgroundColor="$gray2" borderRadius="$4">
+              <Controller
+                name="name"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <InputComponent
+                    id="name"
+                    label="Name"
+                    variant="inline"
+                    required
+                    inputProps={{
+                      placeholder: 'Riding Community',
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <TextAreaComponent
-                id="description"
-                label="Description"
-                textAreaProps={{
-                  placeholder: 'Description',
-                  maxHeight: 200,
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
+              <Separator />
+              <Controller
+                name="description"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <TextAreaComponent
+                    id="description"
+                    label="Description"
+                    variant="inline"
+                    required
+                    textAreaProps={{
+                      placeholder: 'Description',
+                      maxHeight: 200,
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="isPrivate"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <XStack width={200} alignItems="center" gap="$4">
-                <Label
-                  paddingRight="$0"
-                  minWidth={90}
-                  justifyContent="flex-end"
-                  htmlFor="isPrivate"
-                >
-                  Make Community Private
-                </Label>
-                <Separator minHeight={20} vertical />
-                <Switch
-                  id="isPrivate"
-                  checked={value}
-                  onCheckedChange={onChange}
-                  onBlur={onBlur}
-                >
-                  <Switch.Thumb animation="quicker" />
-                </Switch>
-              </XStack>
-            )}
-          />
+            </YStack>
+            <YStack gap="$2" p="$2" backgroundColor="$gray2" borderRadius="$4">
+              <Controller
+                name="isPrivate"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <XStack alignItems="center" jc="space-between" gap="$4">
+                    <Label
+                      color="$color05"
+                      unstyled
+                      fontSize="$4"
+                      onPress={() => onChange(!value)}
+                    >
+                      Make Community Private
+                    </Label>
+                    <Switch checked={value} onCheckedChange={onChange} onBlur={onBlur}>
+                      <Switch.Thumb animation="quicker" />
+                    </Switch>
+                  </XStack>
+                )}
+              />
+            </YStack>
+          </ScrollView>
+        </SafeAreaView>
+        <View bg="$color5" p="$4">
           <Form.Trigger asChild>
-            <Button backgroundColor="$blue8">Save Changes</Button>
+            <Button backgroundColor="$blue8" mb={insets.bottom}>
+              Save Changes
+            </Button>
           </Form.Trigger>
-        </Form>
-      </ScrollView>
-    </SafeAreaView>
+        </View>
+      </YStack>
+    </Form>
   )
 }
