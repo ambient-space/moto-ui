@@ -96,6 +96,8 @@ const DatePickerInput = <T extends FieldValues>({
                 Keyboard.dismiss()
                 setIsOpen(true)
               }}
+              width="100%"
+              textAlign="right"
               placeholder="Select a date"
               editable={false}
               unstyled
