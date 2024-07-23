@@ -59,6 +59,7 @@ export default function TextAreaComponent({
           fontSize="$6"
           display="flex"
           flexShrink={1}
+          textAlign="right"
           overflow="scroll"
         />
       </XStack>
