@@ -1,33 +1,12 @@
-import { client } from '@/lib/axios'
-import useAuthStore from '@/state/authStore'
-import type { TCommunityMember } from '@/state/communityStore'
 import { CircleEllipsis } from '@tamagui/lucide-icons'
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
 import { Adapt, Button, Popover, YStack } from 'tamagui'
 
 export default function Actions() {
-  const { user, token } = useAuthStore((state) => state)
-  const { slug } = useLocalSearchParams()
-  const [communityMember, setCommunityMember] = useState<TCommunityMember | null>(null)
-  const getCommunityMemberDetails = async () => {
-    try {
-      const res = await client.get(`/user/community/${slug}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+  const { isAdmin, isMember } = useLocalSearchParams()
 
-      if (!res.data.error) {
-        setCommunityMember(res.data.data)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  useEffect(() => {
-    getCommunityMemberDetails()
-  }, [token])
+  if (isMember === 'false') return null
+
   return (
     <Popover>
       <Popover.Trigger asChild>
@@ -70,7 +49,7 @@ export default function Actions() {
         <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
 
         <YStack gap="$2">
-          {communityMember?.role === 'admin' ? (
+          {isAdmin !== 'false' ? (
             <>
               <Button>Add Trip</Button>
               <Button>Edit Community</Button>
