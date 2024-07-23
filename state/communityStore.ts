@@ -61,6 +61,8 @@ export type TCommunityDetail = {
     }
   })[]
   memberCount: number
+  isAdmin: boolean
+  isMember: boolean
 }
 
 export const useCommunityStore = create<TCommunityStore>((set) => ({
