@@ -3,7 +3,7 @@ import { TripCard } from '@/components/TripCard'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TCommunityDetail } from '@/state/communityStore'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -54,6 +54,10 @@ export default function CommunityInfoScreen() {
 
     if (!res.data.error) {
       setCommunity(res.data.data)
+      router.setParams({
+        isMember: res.data.data.isMember,
+        isAdmin: res.data.data.isAdmin,
+      })
     }
   }
 
@@ -87,7 +91,7 @@ export default function CommunityInfoScreen() {
               >
                 <Avatar.Image
                   source={{
-                    uri: community.profilePicture,
+                    uri: community.profilePicture || '#',
                     height: 140,
                   }}
                 />
@@ -95,21 +99,23 @@ export default function CommunityInfoScreen() {
               </Avatar>
               <H3>{community.name}</H3>
               <Text>{community.description}</Text>
-              <Button
-                size="$3"
-                mt="$4"
-                backgroundColor="$blue8"
-                onPress={() => {
-                  // set the title of the chat
-                  // @ts-ignore
-                  navigation.navigate('community/[slug]/chat', {
-                    slug,
-                    title: community.name,
-                  })
-                }}
-              >
-                Chat
-              </Button>
+              {community.isMember && (
+                <Button
+                  size="$3"
+                  mt="$4"
+                  backgroundColor="$blue8"
+                  onPress={() => {
+                    // set the title of the chat
+                    // @ts-ignore
+                    navigation.navigate('community/[slug]/chat', {
+                      slug,
+                      title: community.name,
+                    })
+                  }}
+                >
+                  Chat
+                </Button>
+              )}
 
               <H4>Trips</H4>
               {community.trips.length > 0 ? (
@@ -163,7 +169,7 @@ export default function CommunityInfoScreen() {
 
       {userId && !community.members.find((t) => t.userId === userId) && (
         <View bg="$color5" p="$4">
-          <Button bg="$accentBackground" mb={insets.bottom} onPress={handleJoin}>
+          <Button backgroundColor="$blue8" mb={insets.bottom} onPress={handleJoin}>
             <Text>Join Community</Text>
           </Button>
         </View>
