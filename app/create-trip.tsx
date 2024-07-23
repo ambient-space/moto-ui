@@ -282,13 +282,13 @@ export default function CreateTrips() {
             </YStack>
           </ScrollView>
         </SafeAreaView>
-        <Form.Trigger asChild>
-          <View bg="$color5" p="$4">
+        <View bg="$color5" p="$4">
+          <Form.Trigger asChild>
             <Button backgroundColor="$blue8" mb={insets.bottom}>
               Save Changes
             </Button>
-          </View>
-        </Form.Trigger>
+          </Form.Trigger>
+        </View>
       </YStack>
     </Form>
   )
