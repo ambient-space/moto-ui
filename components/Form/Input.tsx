@@ -6,6 +6,8 @@ import {
   type InputProps,
   Label,
   type ViewProps,
+  YStack,
+  XStack,
 } from 'tamagui'
 
 export type TInputComponentProps = {
@@ -15,6 +17,8 @@ export type TInputComponentProps = {
   containerProps?: ViewProps
   label?: string
   message?: string
+  variant?: 'default' | 'inline'
+  required?: boolean
 }
 
 export default function InputComponent({
@@ -24,16 +28,42 @@ export default function InputComponent({
   message,
   messageProps,
   containerProps,
+  variant = 'default',
+  required = false,
 }: TInputComponentProps) {
-  return (
-    <View {...containerProps} py="$1" htmlFor={id}>
+  return variant === 'default' ? (
+    <View {...containerProps} py="$1">
       {label && (
-        <Label unstyled color="$color">
+        <Label unstyled color="$color" htmlFor={id}>
           {label}
+          {required ? '*' : ''}
         </Label>
       )}
       <Input {...inputProps} id={id} />
       {message && <Paragraph {...messageProps}>{message}</Paragraph>}
     </View>
+  ) : (
+    <YStack {...containerProps} py="$1">
+      <XStack jc="space-between" gap="4" ai="baseline">
+        {label && (
+          <Label unstyled color="$color05" fontSize="$4" htmlFor={id}>
+            {label}
+            {required ? '*' : ''}
+          </Label>
+        )}
+        <Input
+          {...inputProps}
+          id={id}
+          unstyled
+          color="$color"
+          fontSize="$6"
+          display="flex"
+          flexShrink={1}
+          textAlign="right"
+          overflow="scroll"
+        />
+      </XStack>
+      {message && <Paragraph {...messageProps}>{message}</Paragraph>}
+    </YStack>
   )
 }
