@@ -1,16 +1,11 @@
-import { Button, Card, Form, H2, Paragraph, View } from 'tamagui'
-import InputComponent from '../Form/Input'
+import { Button, Form, Paragraph, Separator, View, YStack } from 'tamagui'
+import InputComponent from '../../Form/Input'
 import { z } from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { client } from '@/lib/axios'
 import { AxiosError } from 'axios'
 import useAuthStore from '@/state/authStore'
-import { router } from 'expo-router'
-
-export type TSignupFormProps = {
-  handleLogin: () => void
-}
 
 const SignupFormSchema = z.object({
   username: z
@@ -21,7 +16,10 @@ const SignupFormSchema = z.object({
   confirmPassword: z.string({ message: 'Required' }),
 })
 
-export default function SignupForm({ handleLogin }: TSignupFormProps) {
+export default function Auth({
+  handleLogin,
+  onSuccess,
+}: { handleLogin: () => void; onSuccess: (token: string) => void }) {
   const login = useAuthStore((state) => state.login)
 
   const {
@@ -29,15 +27,9 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({
+  } = useForm<typeof SignupFormSchema._type>({
     resolver: zodResolver(SignupFormSchema),
     reValidateMode: 'onBlur',
-    defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
   })
 
   const handleSignup = async (data: typeof SignupFormSchema._type) => {
@@ -49,17 +41,8 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
         return
       }
 
-      const user = await client.get('/user', {
-        headers: {
-          Authorization: `Bearer ${res.data.data.session}`,
-        },
-      })
-
-      if (user.data.error !== null) {
-        // handle errors
-      }
-      login(res.data.data.session, user.data.data)
-      router.push('/home')
+      // login(res.data.data.session, user.data.data)
+      onSuccess(res.data.data.session)
     } catch (err: any) {
       if (err instanceof AxiosError && err.response) {
         if ('fields' in err.response.data.error) {
@@ -74,33 +57,33 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
           message: err.response.data.error.message,
         })
       }
-      console.debug(err)
+      console.debug(err.response.data)
     }
   }
 
   return (
     <View
-      gap="$2"
-      p="$4"
+      key="signup_auth"
       animation="200ms"
       enterStyle={{
-        x: 20,
+        x: -40,
         opacity: 0,
       }}
       exitStyle={{
-        x: 20,
+        x: -40,
         opacity: 0,
       }}
     >
-      <H2>Sign up for an account</H2>
-      <Card p="$4" h="max-content" mb="$8" pb="$10">
-        <Form onSubmit={handleSubmit(handleSignup)}>
+      <Form onSubmit={handleSubmit(handleSignup)}>
+        <YStack gap="$2">
           <Controller
             control={control}
             name="username"
             render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
               <InputComponent
                 id="username_signup"
+                variant="inline"
+                required
                 label="Username"
                 inputProps={{
                   placeholder: 'johndoe',
@@ -117,12 +100,16 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               />
             )}
           />
+          <Separator />
+
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
               <InputComponent
                 id="email_signup"
+                variant="inline"
+                required
                 label="Email"
                 inputProps={{
                   placeholder: 'johndoe@doemail.com',
@@ -140,6 +127,8 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               />
             )}
           />
+          <Separator />
+
           <Controller
             control={control}
             name="password"
@@ -147,10 +136,13 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               <InputComponent
                 id="password_signup"
                 label="Password"
+                required
+                variant="inline"
                 inputProps={{
                   placeholder: 'Password123',
                   secureTextEntry: true,
                   value,
+                  width: '100%',
                   onBlur,
                   onChangeText: onChange,
                   borderColor: error ? 'red' : undefined,
@@ -162,6 +154,7 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               />
             )}
           />
+          <Separator />
           <Controller
             control={control}
             name="confirmPassword"
@@ -169,10 +162,13 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               <InputComponent
                 id="confirmPassword_signup"
                 label="Confirm Password"
+                variant="inline"
+                required
                 inputProps={{
                   placeholder: 'Password123',
                   secureTextEntry: true,
                   value,
+                  width: '100%',
                   onBlur,
                   onChangeText: onChange,
                   borderColor: error ? 'red' : undefined,
@@ -184,18 +180,16 @@ export default function SignupForm({ handleLogin }: TSignupFormProps) {
               />
             )}
           />
-          {errors.root && <Paragraph color="red">{errors.root.message}</Paragraph>}
+        </YStack>
+        {errors.root && <Paragraph color="red">{errors.root.message}</Paragraph>}
 
-          <Form.Trigger asChild>
-            <Button w="100%" mt="$2">
-              Sign up
-            </Button>
-          </Form.Trigger>
-          <Button unstyled w="100%" textAlign="center" mt="$4" onPress={handleLogin}>
-            Already have an account? Sign In
-          </Button>
-        </Form>
-      </Card>
+        <Form.Trigger asChild mt="$4">
+          <Button w="100%">Continue</Button>
+        </Form.Trigger>
+        <Button unstyled w="100%" textAlign="center" mt="$2" onPress={handleLogin}>
+          Already have an account? Sign In
+        </Button>
+      </Form>
     </View>
   )
 }

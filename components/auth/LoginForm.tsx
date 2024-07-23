@@ -1,4 +1,4 @@
-import { Button, Card, Form, H2, Paragraph, View } from 'tamagui'
+import { Button, Card, Form, H2, Paragraph, Separator, View, YStack } from 'tamagui'
 import InputComponent from '../Form/Input'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
@@ -13,8 +13,8 @@ export type TLoginFormProps = {
 }
 
 const LoginFormSchema = z.object({
-  email: z.string({ message: 'Email is required' }).email('Invalid email address'),
-  password: z.string({ message: 'Password is required' }),
+  email: z.string({ message: 'required' }).email('Invalid email address'),
+  password: z.string({ message: 'required' }).min(1, "Password can't be empty"),
 })
 
 export default function LoginForm({ handleSignUp }: TLoginFormProps) {
@@ -25,13 +25,9 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({
+  } = useForm<typeof LoginFormSchema._type>({
     resolver: zodResolver(LoginFormSchema),
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
   })
 
   const handleLogin = async (data: typeof LoginFormSchema._type) => {
@@ -83,62 +79,67 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
       }}
     >
       <H2>Login to your account</H2>
-      <Card p="$4" h="max-content" mb="$8" pb="$10">
+      <Card p="$4" h="max-content">
         <Form onSubmit={handleSubmit(handleLogin)}>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="email_login"
-                label="Email"
-                inputProps={{
-                  placeholder: 'johndoe@doemail.com',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  autoCapitalize: 'none',
-                  keyboardType: 'email-address',
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="password_login"
-                label="Password"
-                inputProps={{
-                  placeholder: 'Password123',
-                  secureTextEntry: true,
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
+          <YStack gap="$2">
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="email_login"
+                  required
+                  label="Email"
+                  variant="inline"
+                  inputProps={{
+                    placeholder: 'johndoe@doemail.com',
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    autoCapitalize: 'none',
+                    keyboardType: 'email-address',
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+            <Separator />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="password_login"
+                  label="Password"
+                  required
+                  variant="inline"
+                  inputProps={{
+                    width: '100%',
+                    placeholder: 'Password123',
+                    secureTextEntry: true,
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+          </YStack>
           {errors.root && <Paragraph color="red">{errors.root.message}</Paragraph>}
-          <Form.Trigger asChild>
-            <Button w="100%" mt="$2">
-              Log in
-            </Button>
+          <Form.Trigger asChild mt="$4">
+            <Button w="100%">Log in</Button>
           </Form.Trigger>
-          <Button unstyled w="100%" textAlign="center" mt="$4" onPress={handleSignUp}>
+          <Button unstyled w="100%" textAlign="center" mt="$2" onPress={handleSignUp}>
             Don't have an account? Sign Up
           </Button>
         </Form>
