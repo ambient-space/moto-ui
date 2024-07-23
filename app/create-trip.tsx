@@ -3,7 +3,7 @@ import TextAreaComponent from '@/components/Form/TextArea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native'
-import { Button, Form, ScrollView } from 'tamagui'
+import { Button, Form, ScrollView, Separator, YStack } from 'tamagui'
 import { z } from 'zod'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
@@ -94,91 +94,111 @@ export default function CreateTrips() {
         }}
       >
         <Form onSubmit={handleSubmit(onSubmit)} gap="$2" px="$2">
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="name"
-                label="Name"
-                inputProps={{
-                  placeholder: 'Trip to Shimla',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <TextAreaComponent
-                id="description"
-                label="Description"
-                textAreaProps={{
-                  placeholder: 'Description',
-                  maxHeight: 200,
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="maxParticipants"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="maxParticipants"
-                label="Max Participants"
-                inputProps={{
-                  placeholder: 'Max Participants',
-                  maxHeight: 200,
-                  value: value?.toString(),
-                  onBlur,
-                  onChangeText: onChange,
-                  inputMode: 'numeric',
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <DatePickerInput
-            name="startDate"
-            control={control}
-            label="Start Date"
-            datePickerProps={{
-              minimumDate: new Date(),
-            }}
-          />
-          <DatePickerInput
-            name="endDate"
-            control={control}
-            label="End Date"
-            datePickerProps={{
-              minimumDate: watchStartDate ? new Date(watchStartDate) : new Date(),
-            }}
-          />
+          <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <Controller
+              name="name"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="name"
+                  label="Name"
+                  required
+                  inputProps={{
+                    placeholder: 'Trip to Shimla',
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  variant="inline"
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+            <Separator />
+            <Controller
+              name="description"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <TextAreaComponent
+                  id="description"
+                  label="Description"
+                  variant="inline"
+                  required
+                  textAreaProps={{
+                    placeholder: 'Description',
+                    maxHeight: 200,
+                    width: '100%',
+                    textAlign: 'right',
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+            <Separator />
+            <Controller
+              name="maxParticipants"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="maxParticipants"
+                  label="Max Participants"
+                  variant="inline"
+                  required
+                  inputProps={{
+                    placeholder: '4',
+                    value: value?.toString(),
+                    minWidth: '20%',
+                    textAlign: 'right',
+                    onBlur,
+                    onChangeText: onChange,
+                    inputMode: 'numeric',
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+          </YStack>
+
+          <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <DatePickerInput
+              name="startDate"
+              required
+              control={control}
+              label="Start Date"
+              datePickerProps={{
+                minimumDate: new Date(),
+              }}
+              variant="inline"
+            />
+            <Separator />
+            <DatePickerInput
+              name="endDate"
+              control={control}
+              label="End Date"
+              datePickerProps={{
+                minimumDate: watchStartDate ? new Date(watchStartDate) : new Date(),
+              }}
+              variant="inline"
+            />
+          </YStack>
 
           {/* <SelectInput
             name="startLocation"
@@ -187,50 +207,56 @@ export default function CreateTrips() {
             label="Start Location"
             fetchOptions={searchLocations}
           /> */}
-          <Controller
-            name="startLocation"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="startLocation"
-                label="Start Location"
-                inputProps={{
-                  placeholder: 'Cannaught Place, New Delhi',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="endLocation"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="endLocation"
-                label="End Location"
-                inputProps={{
-                  placeholder: 'Ambience Mall, Gurugram',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
+          <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <Controller
+              name="startLocation"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="startLocation"
+                  label="Start Location"
+                  variant="inline"
+                  required
+                  inputProps={{
+                    placeholder: 'Cannaught Place, New Delhi',
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+            <Separator />
+            <Controller
+              name="endLocation"
+              control={control}
+              render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
+                <InputComponent
+                  id="endLocation"
+                  label="End Location"
+                  variant="inline"
+                  inputProps={{
+                    placeholder: 'Ambience Mall, Gurugram',
+                    value,
+                    onBlur,
+                    onChangeText: onChange,
+                    // add red border if error
+                    borderColor: error ? 'red' : undefined,
+                  }}
+                  message={error?.message}
+                  messageProps={{
+                    color: 'red',
+                  }}
+                />
+              )}
+            />
+          </YStack>
           <Form.Trigger asChild>
             <Button backgroundColor="$blue8">Save Changes</Button>
           </Form.Trigger>
