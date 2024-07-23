@@ -140,6 +140,7 @@ export default function Auth({
                 variant="inline"
                 inputProps={{
                   placeholder: 'Password123',
+                  textContentType: 'oneTimeCode',
                   secureTextEntry: true,
                   value,
                   width: '100%',
@@ -167,6 +168,7 @@ export default function Auth({
                 inputProps={{
                   placeholder: 'Password123',
                   secureTextEntry: true,
+                  textContentType: 'oneTimeCode',
                   value,
                   width: '100%',
                   onBlur,
