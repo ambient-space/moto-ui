@@ -59,6 +59,7 @@ export default function InputComponent({
           fontSize="$6"
           display="flex"
           flexShrink={1}
+          width={inputProps?.width || '100%'}
           textAlign="right"
           overflow="scroll"
         />
