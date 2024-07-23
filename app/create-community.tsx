@@ -35,7 +35,6 @@ export default function CreateCommunity() {
   const {
     control,
     handleSubmit,
-    setError,
     setValue,
     formState: { errors },
     watch,
