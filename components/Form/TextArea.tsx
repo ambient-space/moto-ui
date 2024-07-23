@@ -54,6 +54,7 @@ export default function TextAreaComponent({
         <TextArea
           {...textAreaProps}
           id={id}
+          width={textAreaProps?.width || '100%'}
           unstyled
           color="$color"
           fontSize="$6"
