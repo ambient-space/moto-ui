@@ -76,7 +76,7 @@ export default function TripInfoScreen() {
       <SafeAreaView style={{ flexGrow: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <YStack>
-            <YStack gap="$2" p="$4">
+            <YStack gap="$2" px="$4">
               <H3>{trip.name}</H3>
               <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
                 <Paragraph fontSize="$3" color="$color05">
