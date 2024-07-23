@@ -1,5 +1,5 @@
 import LoginForm from '@/components/auth/LoginForm'
-import SignupForm from '@/components/auth/SignupForm'
+import SignupForm from '@/components/auth/signup/SignupForm'
 import useAuthStore from '@/state/authStore'
 import { Redirect } from 'expo-router'
 import { useState } from 'react'
