@@ -3,12 +3,13 @@ import TextAreaComponent from '@/components/Form/TextArea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native'
-import { Button, Form, ScrollView } from 'tamagui'
+import { Button, Form, ScrollView, Separator, View, YStack } from 'tamagui'
 import { z } from 'zod'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import { router } from 'expo-router'
 import DatePickerInput from '@/components/Form/DatePicker'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 // TODO: handle location input with map support
 const CreateTripFormSchema = z.object({
@@ -45,6 +46,7 @@ export default function CreateTrips() {
   })
   const watchStartDate = watch('startDate')
   const token = useAuthStore((state) => state.token)
+  const insets = useSafeAreaInsets()
 
   // const [startLocation, setStartLocation] = useState("")
 
@@ -85,157 +87,209 @@ export default function CreateTrips() {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView
-        keyboardDismissMode="on-drag"
-        p="$2"
-        contentContainerStyle={{
-          height: '100%',
-        }}
-      >
-        <Form onSubmit={handleSubmit(onSubmit)} gap="$2" px="$2">
-          <Controller
-            name="name"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="name"
-                label="Name"
-                inputProps={{
-                  placeholder: 'Trip to Shimla',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <TextAreaComponent
-                id="description"
-                label="Description"
-                textAreaProps={{
-                  placeholder: 'Description',
-                  maxHeight: 200,
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="maxParticipants"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="maxParticipants"
-                label="Max Participants"
-                inputProps={{
-                  placeholder: 'Max Participants',
-                  maxHeight: 200,
-                  value: value?.toString(),
-                  onBlur,
-                  onChangeText: onChange,
-                  inputMode: 'numeric',
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
-              />
-            )}
-          />
-          <DatePickerInput
-            name="startDate"
-            control={control}
-            label="Start Date"
-            datePickerProps={{
-              minimumDate: new Date(),
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <YStack jc="space-between" h="100%">
+        <SafeAreaView style={{ flexGrow: 1 }}>
+          <ScrollView
+            keyboardDismissMode="on-drag"
+            py="$2"
+            px="$3"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              display: 'flex',
+              gap: 12,
             }}
-          />
-          <DatePickerInput
-            name="endDate"
-            control={control}
-            label="End Date"
-            datePickerProps={{
-              minimumDate: watchStartDate ? new Date(watchStartDate) : new Date(),
-            }}
-          />
+          >
+            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+              <Controller
+                name="name"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <InputComponent
+                    id="name"
+                    label="Name"
+                    required
+                    inputProps={{
+                      placeholder: 'Trip to Shimla',
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    variant="inline"
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
+              />
+              <Separator />
+              <Controller
+                name="description"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <TextAreaComponent
+                    id="description"
+                    label="Description"
+                    variant="inline"
+                    required
+                    textAreaProps={{
+                      placeholder: 'Description',
+                      maxHeight: 200,
+                      width: '100%',
+                      textAlign: 'right',
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
+              />
+              <Separator />
+              <Controller
+                name="maxParticipants"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <InputComponent
+                    id="maxParticipants"
+                    label="Max Participants"
+                    variant="inline"
+                    required
+                    inputProps={{
+                      placeholder: '4',
+                      value: value?.toString(),
+                      minWidth: '20%',
+                      textAlign: 'right',
+                      onBlur,
+                      onChangeText: onChange,
+                      inputMode: 'numeric',
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
+              />
+            </YStack>
 
-          {/* <SelectInput
+            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+              <DatePickerInput
+                id="startDate"
+                name="startDate"
+                required
+                control={control}
+                label="Start Date"
+                datePickerProps={{
+                  minimumDate: new Date(),
+                }}
+                variant="inline"
+              />
+              <Separator />
+              <DatePickerInput
+                id="endDate"
+                name="endDate"
+                control={control}
+                label="End Date"
+                datePickerProps={{
+                  minimumDate: watchStartDate ? new Date(watchStartDate) : new Date(),
+                }}
+                variant="inline"
+              />
+            </YStack>
+
+            {/* <SelectInput
             name="startLocation"
             control={control}
             debounceTime={1000}
             label="Start Location"
             fetchOptions={searchLocations}
           /> */}
-          <Controller
-            name="startLocation"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="startLocation"
-                label="Start Location"
-                inputProps={{
-                  placeholder: 'Cannaught Place, New Delhi',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
+            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+              <Controller
+                name="startLocation"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <InputComponent
+                    id="startLocation"
+                    label="Start Location"
+                    variant="inline"
+                    required
+                    inputProps={{
+                      placeholder: 'Cannaught Place, New Delhi',
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="endLocation"
-            control={control}
-            render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
-              <InputComponent
-                id="endLocation"
-                label="End Location"
-                inputProps={{
-                  placeholder: 'Ambience Mall, Gurugram',
-                  value,
-                  onBlur,
-                  onChangeText: onChange,
-                  // add red border if error
-                  borderColor: error ? 'red' : undefined,
-                }}
-                message={error?.message}
-                messageProps={{
-                  color: 'red',
-                }}
+              <Separator />
+              <Controller
+                name="endLocation"
+                control={control}
+                render={({
+                  field: { onChange, value, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <InputComponent
+                    id="endLocation"
+                    label="End Location"
+                    variant="inline"
+                    inputProps={{
+                      placeholder: 'Ambience Mall, Gurugram',
+                      value,
+                      onBlur,
+                      onChangeText: onChange,
+                      // add red border if error
+                      borderColor: error ? 'red' : undefined,
+                    }}
+                    message={error?.message}
+                    messageProps={{
+                      color: 'red',
+                    }}
+                  />
+                )}
               />
-            )}
-          />
+            </YStack>
+          </ScrollView>
+        </SafeAreaView>
+        <View bg="$color5" p="$4">
           <Form.Trigger asChild>
-            <Button backgroundColor="$blue8">Save Changes</Button>
+            <Button backgroundColor="$blue8" mb={insets.bottom}>
+              Save Changes
+            </Button>
           </Form.Trigger>
-        </Form>
-      </ScrollView>
-    </SafeAreaView>
+        </View>
+      </YStack>
+    </Form>
   )
 }

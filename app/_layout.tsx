@@ -113,13 +113,6 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
-            name="profile"
-            options={{
-              headerBackTitleVisible: false,
-              headerTitle: '',
-            }}
-          />
-          <Stack.Screen
             name="join-community"
             options={{
               headerBackTitleVisible: false,
@@ -133,6 +126,7 @@ function RootLayoutNav() {
               // headerShown: false,
               title: '',
               headerBackTitleVisible: false,
+              headerTransparent: true,
               headerRight: () => <Actions />,
             }}
           />
@@ -141,6 +135,26 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               title: params.title as string,
+            }}
+          />
+          <Stack.Screen
+            name="profile/index"
+            options={{
+              // headerShown: false,
+              title: '',
+              headerBackTitleVisible: false,
+              // headerRight: () => <Actions />,
+            }}
+          />
+          <Stack.Screen
+            name="profile/[slug]/index"
+            options={{
+              // headerShown: false,
+              title: '',
+              headerBackTitleVisible: false,
+              headerTransparent: true,
+
+              // headerRight: () => <Actions />,
             }}
           />
           <Stack.Screen
@@ -154,6 +168,14 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               headerTitle: 'Create Community',
+              headerTransparent: true,
+            }}
+          />
+          <Stack.Screen
+            name="create-trip"
+            options={{
+              headerBackTitleVisible: false,
+              headerTitle: 'Create Trip',
               headerTransparent: true,
             }}
           />
