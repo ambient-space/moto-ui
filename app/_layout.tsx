@@ -158,9 +158,11 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
-            name="trip"
+            name="trip/[slug]/index"
             options={{
-              headerShown: false,
+              headerBackTitleVisible: false,
+              title: '',
+              headerTransparent: true,
             }}
           />
           <Stack.Screen
