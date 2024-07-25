@@ -8,11 +8,12 @@ export default function TripsScreen() {
   const trips = useTripStore((state) => state.trips)
   return (
     <SafeAreaView>
-      <YStack gap="$2" mx="$2">
+      <YStack gap="$2">
         <FlatList
           style={{ width: '100%', height: '100%' }}
           data={trips}
-          contentContainerStyle={{ gap: 8 }}
+          fadingEdgeLength={100}
+          contentContainerStyle={{ gap: 8, paddingLeft: 16, paddingRight: 16 }}
           renderItem={({ item: t }) => (
             <TripCard
               key={t.id}
@@ -25,6 +26,7 @@ export default function TripsScreen() {
               onPress={() => {
                 router.push(`trip/${t.id}`)
               }}
+              width="100%"
             />
           )}
         />
