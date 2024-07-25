@@ -2,21 +2,12 @@ import MemberCard from '@/components/MemberCard'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TTripDetails } from '@/state/tripStore'
+import { Calendar, MapPin, Users } from '@tamagui/lucide-icons'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  Text,
-  YStack,
-  XStack,
-  H3,
-  H4,
-  ScrollView,
-  Paragraph,
-  Button,
-  View,
-} from 'tamagui'
+import { YStack, H4, ScrollView, Paragraph, Button, View, XStack } from 'tamagui'
 
 export default function TripInfoScreen() {
   const { slug } = useLocalSearchParams()
@@ -75,70 +66,40 @@ export default function TripInfoScreen() {
     <YStack jc="space-between" h="100%">
       <SafeAreaView style={{ flexGrow: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <YStack>
-            <YStack gap="$2" px="$4">
-              <H3>{trip.name}</H3>
-              <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                <Paragraph fontSize="$3" color="$color05">
-                  Details
+          <YStack gap="$4" px="$4">
+            <YStack gap="$2">
+              <XStack theme="gray_alt2" ai="center" gap="$2" overflow="hidden">
+                <MapPin size="$1" />
+                <Paragraph fontSize="$5" fontWeight="600" wordWrap="break-word">
+                  {trip.startLocation}
+                  {trip.endLocation && ` - ${trip.endLocation}`}
                 </Paragraph>
-                <Paragraph>{trip.description}</Paragraph>
-              </YStack>
-
-              <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                <Paragraph fontSize="$3" color="$color05">
-                  Maximum Participants
+              </XStack>
+              <XStack theme="gray_alt2" ai="center" gap="$2">
+                <Calendar size="$1" />
+                <Paragraph fontSize="$5" fontWeight="600">
+                  {new Date(trip.startDate).toLocaleString()}
+                  {trip.endDate && ` - ${new Date(trip.endDate).toLocaleString()}`}
                 </Paragraph>
-                <Paragraph fontWeight="bold">{trip.maxParticipants}</Paragraph>
-              </YStack>
+              </XStack>
 
-              <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                <Paragraph fontSize="$3" color="$color05">
-                  Location
+              <XStack theme="gray_alt2" ai="center" gap="$2">
+                <Users size="$1" />
+                <Paragraph theme="gray_alt2" fontSize="$5" fontWeight="600">
+                  {trip.participants.length} participants
                 </Paragraph>
-                <XStack>
-                  <Paragraph fontSize="$2">From </Paragraph>
-                  <Paragraph fontWeight="bold">{trip.startLocation}</Paragraph>
-                </XStack>
-                {trip.endLocation && (
-                  <XStack>
-                    <Paragraph fontSize="$2">To </Paragraph>
-                    <Paragraph fontWeight="bold">{trip.endLocation}</Paragraph>
-                  </XStack>
-                )}
-              </YStack>
-
-              <YStack gap="$1" bg="$color5" p="$2" borderRadius="$2">
-                <Paragraph fontSize="$3" color="$color05">
-                  Date
-                </Paragraph>
-                <XStack>
-                  <Paragraph fontSize="$2">From </Paragraph>
-                  <Paragraph fontWeight="bold">
-                    {new Date(trip.startDate).toLocaleString()}
-                  </Paragraph>
-                </XStack>
-                {trip.endDate && (
-                  <XStack>
-                    <Paragraph fontSize="$2">To </Paragraph>
-                    <Paragraph fontWeight="bold">
-                      {new Date(trip.endDate).toLocaleString()}
-                    </Paragraph>
-                  </XStack>
-                )}
-              </YStack>
-
-              <H4>Participants</H4>
+              </XStack>
+              <Paragraph fontSize="$5">{trip.description}</Paragraph>
+            </YStack>
+            <YStack gap="$2">
+              <H4>Meet The Other Participants</H4>
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 maxHeight={300}
                 overflow="hidden"
                 mt="$2"
-                backgroundColor="$gray2"
-                p="$2"
-                borderRadius="$2"
               >
-                <YStack gap="$2">
+                <YStack gap="$3">
                   {trip.participants.map((member) => (
                     <MemberCard
                       key={member.userId}
@@ -148,6 +109,7 @@ export default function TripInfoScreen() {
                           profilePicture: member.profile.profilePicture,
                           fullName: member.profile.fullName,
                         },
+                        isCurrentUser: member.userId === userId,
                         role: member.role,
                       }}
                     />
@@ -159,9 +121,18 @@ export default function TripInfoScreen() {
         </ScrollView>
       </SafeAreaView>
       {userId && !trip.participants.find((t) => t.userId === userId) && (
-        <View bg="$color5" p="$4">
-          <Button bg="$accentBackground" mb={insets.bottom} onPress={handleJoin}>
-            <Text>Join Trip</Text>
+        <View p="$4">
+          <Button
+            backgroundColor="$color"
+            color="$background"
+            textProps={{
+              fontWeight: 'bold',
+              fontSize: '$5',
+            }}
+            mb={insets.bottom}
+            onPress={handleJoin}
+          >
+            Join Trip
           </Button>
         </View>
       )}
