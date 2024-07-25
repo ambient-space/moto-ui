@@ -80,7 +80,7 @@ export default function CreateTrips() {
         },
       })
       const d = res.data.data
-      router.push(`/trip/${d.id}`)
+      router.replace(`/trip/${d.id}`)
     } catch (e) {
       console.error(e)
     }
@@ -91,16 +91,17 @@ export default function CreateTrips() {
       <YStack jc="space-between" h="100%">
         <SafeAreaView style={{ flexGrow: 1 }}>
           <ScrollView
-            keyboardDismissMode="on-drag"
             py="$2"
             px="$3"
+            keyboardDismissMode="on-drag"
+            automaticallyAdjustKeyboardInsets
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               display: 'flex',
               gap: 12,
             }}
           >
-            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <YStack gap="$2" backgroundColor="$gray2" p="$3" borderRadius="$4">
               <Controller
                 name="name"
                 control={control}
@@ -192,7 +193,7 @@ export default function CreateTrips() {
               />
             </YStack>
 
-            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <YStack gap="$2" backgroundColor="$gray2" p="$3" borderRadius="$4">
               <DatePickerInput
                 id="startDate"
                 name="startDate"
@@ -224,7 +225,7 @@ export default function CreateTrips() {
             label="Start Location"
             fetchOptions={searchLocations}
           /> */}
-            <YStack gap="$2" backgroundColor="$gray2" p="$2" borderRadius="$4">
+            <YStack gap="$2" backgroundColor="$gray2" p="$3" borderRadius="$4">
               <Controller
                 name="startLocation"
                 control={control}
@@ -282,9 +283,17 @@ export default function CreateTrips() {
             </YStack>
           </ScrollView>
         </SafeAreaView>
-        <View bg="$color5" p="$4">
+        <View p="$4">
           <Form.Trigger asChild>
-            <Button backgroundColor="$blue8" mb={insets.bottom}>
+            <Button
+              backgroundColor="$color"
+              color="$background"
+              mb={insets.bottom}
+              textProps={{
+                fontWeight: 'bold',
+                fontSize: '$5',
+              }}
+            >
               Save Changes
             </Button>
           </Form.Trigger>
