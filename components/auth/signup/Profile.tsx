@@ -19,7 +19,7 @@ import { AxiosError } from 'axios'
 import useAuthStore from '@/state/authStore'
 import { router } from 'expo-router'
 import TextAreaComponent from '@/components/Form/TextArea'
-import * as ImagePicker from 'expo-image-picker'
+import { pickImage } from '@/lib/helpers'
 
 const SignupFormSchema = z.object({
   fullName: z
@@ -27,7 +27,7 @@ const SignupFormSchema = z.object({
     .min(3, 'Username must be at least 3 characters'),
   bio: z.string().optional(),
   profilePicture: z.string().optional(),
-  coverPicture: z.string().optional(),
+  coverImage: z.string().optional(),
 })
 
 type TProfileProps = {
@@ -49,7 +49,7 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
     resolver: zodResolver(SignupFormSchema),
     reValidateMode: 'onBlur',
   })
-  const watchCover = watch('coverPicture')
+  const watchCover = watch('coverImage')
   const watchAvatar = watch('profilePicture')
 
   const handleSignup = async (data: typeof SignupFormSchema._type) => {
@@ -75,8 +75,10 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
         // handle errors
       }
       login(token, user.data.data)
-      router.push('/home')
+      router.navigate('/home')
     } catch (err: any) {
+      console.debug(err)
+
       if (err instanceof AxiosError && err.response) {
         if ('fields' in err.response.data.error) {
           for (const field in err.response.data.error.fields) {
@@ -91,20 +93,6 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
         })
       }
       console.debug(err)
-    }
-  }
-  const pickImage = async (field: 'coverPicture' | 'profilePicture') => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: field === 'coverPicture' ? [16, 9] : [1, 1],
-      quality: 0.3,
-      base64: true,
-      allowsMultipleSelection: false,
-    })
-
-    if (!result.canceled) {
-      setValue(field, result.assets[0].uri)
     }
   }
 
@@ -154,7 +142,7 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
           </Avatar>
           <XStack gap="$2">
             <Controller
-              name="coverPicture"
+              name="coverImage"
               control={control}
               render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
                 <VisuallyHidden>
@@ -200,10 +188,13 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
               )}
             />
 
-            <Button size="$3" onPress={() => pickImage('profilePicture')}>
+            <Button
+              size="$3"
+              onPress={() => pickImage(setValue, 'profilePicture', token)}
+            >
               Change Avatar
             </Button>
-            <Button size="$3" onPress={() => pickImage('coverPicture')}>
+            <Button size="$3" onPress={() => pickImage(setValue, 'coverImage', token)}>
               Change Cover Photo
             </Button>
           </XStack>
