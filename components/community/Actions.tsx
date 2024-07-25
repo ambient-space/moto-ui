@@ -1,14 +1,50 @@
+import { client } from '@/lib/axios'
+import useAuthStore from '@/state/authStore'
 import { CircleEllipsis } from '@tamagui/lucide-icons'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useState } from 'react'
 import { Adapt, Button, Popover, YStack } from 'tamagui'
 
 export default function Actions() {
-  const { isAdmin, isMember } = useLocalSearchParams()
+  const { isAdmin, isMember, slug } = useLocalSearchParams()
+  const token = useAuthStore((state) => state.token)
+
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleDelete = async () => {
+    try {
+      await client.delete(`/community/${slug}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      router.back()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleLeave = async () => {
+    try {
+      await client.post(
+        `/community/leave/${slug}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      router.back()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   if (isMember === 'false') return null
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
       <Popover.Trigger asChild>
         <Button unstyled>
           <CircleEllipsis
@@ -51,14 +87,38 @@ export default function Actions() {
         <YStack gap="$2">
           {isAdmin !== 'false' ? (
             <>
-              <Button>Add Trip</Button>
-              <Button>Edit Community</Button>
-              <Button backgroundColor="$red9" color="$white1">
+              <Button
+                textProps={{
+                  fontWeight: 'bold',
+                  fontSize: '$5',
+                }}
+              >
+                Add Trip
+              </Button>
+              <Button
+                textProps={{
+                  fontWeight: 'bold',
+                  fontSize: '$5',
+                }}
+              >
+                Edit Community
+              </Button>
+              <Button
+                backgroundColor="$red9"
+                textProps={{
+                  fontWeight: 'bold',
+                  fontSize: '$5',
+                }}
+                color="$white1"
+                onPress={handleDelete}
+              >
                 Delete Community
               </Button>
             </>
           ) : (
-            <Button color="$red10">Leave Community</Button>
+            <Button color="$red10" onPress={handleLeave}>
+              Leave Community
+            </Button>
           )}
         </YStack>
       </Popover.Content>
