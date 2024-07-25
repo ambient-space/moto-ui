@@ -12,7 +12,7 @@ export default function Settings() {
       <Button
         onPress={() => {
           logout()
-          router.push('/')
+          router.replace('/')
         }}
         color="$red10"
       >
