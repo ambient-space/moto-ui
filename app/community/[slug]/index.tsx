@@ -1,24 +1,16 @@
+import CustomHeader from '@/components/community/Header'
 import MemberCard from '@/components/MemberCard'
 import { TripCard } from '@/components/TripCard'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TCommunityDetail } from '@/state/communityStore'
+import { Users } from '@tamagui/lucide-icons'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  Avatar,
-  Image,
-  Text,
-  YStack,
-  XStack,
-  H3,
-  H4,
-  ScrollView,
-  Button,
-  View,
-} from 'tamagui'
+import { Paragraph } from 'tamagui'
+import { YStack, XStack, H4, ScrollView, Button, View } from 'tamagui'
 
 export default function CommunityInfoScreen() {
   const { slug } = useLocalSearchParams()
@@ -71,51 +63,20 @@ export default function CommunityInfoScreen() {
     <YStack jc="space-between" h="100%">
       <SafeAreaView style={{ flexGrow: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
+          <CustomHeader
+            title={community.name}
+            cover={community.coverImage}
+            avatar={community.profilePicture}
+          />
           <YStack>
-            <Image
-              source={{
-                uri:
-                  community.coverImage ||
-                  'https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg',
-                height: 140,
-              }}
-            />
-            <YStack gap="$2" p="$4">
-              <Avatar
-                size="$8"
-                mt="$-10"
-                borderRadius="$2"
-                borderColor="white"
-                borderWidth="$1"
-                backgroundColor="$blue10"
-              >
-                <Avatar.Image
-                  source={{
-                    uri: community.profilePicture || '#',
-                    height: 140,
-                  }}
-                />
-                <Avatar.Fallback />
-              </Avatar>
-              <H3>{community.name}</H3>
-              <Text>{community.description}</Text>
-              {community.isMember && (
-                <Button
-                  size="$3"
-                  mt="$4"
-                  backgroundColor="$blue8"
-                  onPress={() => {
-                    // set the title of the chat
-                    // @ts-ignore
-                    navigation.navigate('community/[slug]/chat', {
-                      slug,
-                      title: community.name,
-                    })
-                  }}
-                >
-                  Chat
-                </Button>
-              )}
+            <YStack gap="$2" px="$4">
+              <XStack theme="gray_alt2" ai="center" gap="$2" overflow="hidden">
+                <Users size="$1" />
+                <Paragraph fontSize="$5" fontWeight="600" wordWrap="break-word">
+                  {community.memberCount} members
+                </Paragraph>
+              </XStack>
+              <Paragraph fontSize="$5">{community.description}</Paragraph>
 
               <H4>Trips</H4>
               {community.trips.length > 0 ? (
@@ -135,7 +96,9 @@ export default function CommunityInfoScreen() {
                   </XStack>
                 </ScrollView>
               ) : (
-                <Text>This community has not organized any trips yet</Text>
+                <Paragraph fontSize="$5">
+                  This community has not organized any trips yet
+                </Paragraph>
               )}
 
               <H4>Members</H4>
@@ -144,36 +107,57 @@ export default function CommunityInfoScreen() {
                 maxHeight={300}
                 overflow="hidden"
                 mt="$2"
-                backgroundColor="$gray2"
-                p="$2"
-                borderRadius="$2"
               >
-                {community.members.map((member) => (
-                  <MemberCard
-                    key={member.userId}
-                    member={{
-                      id: member.userId,
-                      profile: {
-                        profilePicture: member.profile.profilePicture,
-                        fullName: member.profile.fullName,
-                      },
-                      role: member.role,
-                    }}
-                  />
-                ))}
+                <YStack gap="$3">
+                  {community.members.map((member) => (
+                    <MemberCard
+                      key={member.userId}
+                      member={{
+                        id: member.userId,
+                        profile: {
+                          profilePicture: member.profile.profilePicture,
+                          fullName: member.profile.fullName,
+                        },
+                        role: member.role,
+                      }}
+                    />
+                  ))}
+                </YStack>
               </ScrollView>
             </YStack>
           </YStack>
         </ScrollView>
       </SafeAreaView>
 
-      {userId && !community.members.find((t) => t.userId === userId) && (
-        <View bg="$color5" p="$4">
-          <Button backgroundColor="$blue8" mb={insets.bottom} onPress={handleJoin}>
-            <Text>Join Community</Text>
+      <View p="$4">
+        {userId && !community.members.find((t) => t.userId === userId) ? (
+          <Button
+            backgroundColor="$color"
+            color="$background"
+            textProps={{
+              fontWeight: 'bold',
+              fontSize: '$5',
+            }}
+            mb={insets.bottom}
+            onPress={handleJoin}
+          >
+            Join Community
           </Button>
-        </View>
-      )}
+        ) : (
+          <Button
+            backgroundColor="$color"
+            color="$background"
+            textProps={{
+              fontWeight: 'bold',
+              fontSize: '$5',
+            }}
+            mb={insets.bottom}
+            onPress={handleJoin}
+          >
+            Chat
+          </Button>
+        )}
+      </View>
     </YStack>
   )
 }
