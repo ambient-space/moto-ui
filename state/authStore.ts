@@ -8,6 +8,7 @@ export type TUser = {
   username: string
   profile: {
     fullName: string
+    profilePicture: string
   }
 }
 
