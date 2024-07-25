@@ -84,6 +84,7 @@ function RootLayoutNav() {
                   <Plus />
                 </Button>
               ),
+              headerLargeTitle: true,
               headerSearchBarOptions: {
                 placeholder: 'Search for trips',
               },
@@ -94,6 +95,7 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               headerTitle: 'Explore Communities',
+              headerLargeTitle: true,
               headerRight: () => (
                 <Button
                   unstyled
@@ -162,6 +164,7 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               title: '',
+              headerLargeTitle: true,
               headerTransparent: true,
             }}
           />
@@ -171,6 +174,7 @@ function RootLayoutNav() {
               headerBackTitleVisible: false,
               headerTitle: 'Create Community',
               headerTransparent: true,
+              headerLargeTitle: true,
             }}
           />
           <Stack.Screen
@@ -179,6 +183,7 @@ function RootLayoutNav() {
               headerBackTitleVisible: false,
               headerTitle: 'Create Trip',
               headerTransparent: true,
+              headerLargeTitle: true,
             }}
           />
         </Stack>
