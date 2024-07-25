@@ -3,7 +3,7 @@ import useAuthStore, { type TUserProfileWithUsername } from '@/state/authStore'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
-import { Avatar, Image, Text, View, YStack, Button, Paragraph, H3 } from 'tamagui'
+import { Avatar, Image, View, YStack, Button, Paragraph, H3 } from 'tamagui'
 
 export default function ProfileScreen() {
   const { slug } = useLocalSearchParams()
@@ -61,11 +61,23 @@ export default function ProfileScreen() {
             <YStack ai="center" gap="$2">
               {user.fullName.length > 0 && <H3 mb="$-3">{user.fullName}</H3>}
               <Paragraph color="$color05">@{user.authUser.username}</Paragraph>
-              <Text textAlign="center">
-                {user.bio.length > 0 ? user.bio : 'This user has not added a bio.'}
-              </Text>
+              <Paragraph fontSize="$5" textAlign="center">
+                {user.bio && user.bio.length > 0
+                  ? user.bio
+                  : 'This user has not added a bio.'}
+              </Paragraph>
             </YStack>
-            <Button size="$3" mt="$4" w="100%" backgroundColor="$blue8">
+            <Button
+              size="$3"
+              mt="$4"
+              w="100%"
+              backgroundColor="$color"
+              color="$background"
+              textProps={{
+                fontWeight: 'bold',
+                fontSize: '$5',
+              }}
+            >
               Chat
             </Button>
           </YStack>
