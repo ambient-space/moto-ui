@@ -4,10 +4,12 @@ import { Bell, Cog, Home, UserCircle } from '@tamagui/lucide-icons'
 import { useEffect } from 'react'
 import { useCommunityStore } from '@/state/communityStore'
 import { useTripStore } from '@/state/tripStore'
+import useAuthStore from '@/state/authStore'
 
 export default function MainLayout() {
   const fetchCommunities = useCommunityStore((state) => state.fetchCommunities)
   const fetchTrips = useTripStore((state) => state.fetchTrips)
+  const profilePicture = useAuthStore((state) => state.user?.profile.profilePicture)
 
   useEffect(() => {
     ;(async () => {
@@ -23,9 +25,6 @@ export default function MainLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: {
-          backgroundColor: 'transparent',
-        },
         headerLeft: () => (
           <Button
             unstyled
@@ -36,6 +35,7 @@ export default function MainLayout() {
             }}
           >
             <Avatar circular size="$2">
+              <Avatar.Image source={{ uri: profilePicture }} />
               <Avatar.Fallback backgroundColor="$blue10" />
             </Avatar>
           </Button>
@@ -57,7 +57,8 @@ export default function MainLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Explore',
+          headerShadowVisible: false,
+          title: 'Home',
           tabBarIcon: ({ color }) => <Home color={color} />,
         }}
       />
