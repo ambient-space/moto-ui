@@ -31,7 +31,6 @@ export default function ImagePickerComponent() {
         encoding: FileSystem.EncodingType.Base64,
       })
       setBase64Image(base64)
-      console.log(base64)
     }
   }
 
