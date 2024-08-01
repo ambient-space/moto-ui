@@ -1,6 +1,20 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+export type TVehicleType =
+  | 'Scooter'
+  | 'Cruiser'
+  | 'Sports Bike'
+  | 'Tourer'
+  | 'Scrambler'
+  | 'Adventure'
+  | 'Street Bike'
+  | 'Moped'
+  | 'Super bike'
+  | 'Cafe Racer'
+  | 'Commuter'
+  | 'Maxi Scooter'
+  | 'NA'
 
 export type TUser = {
   id: string
