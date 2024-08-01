@@ -12,6 +12,7 @@ export type TTripOverview = {
   startLocation: string
   participants: TTripParticipant[]
   participantCount: number
+  isParticipant: boolean
 }
 
 export type TTripDetails = {
@@ -34,7 +35,14 @@ export type TTripDetails = {
       profilePicture: string
     }
   })[]
+  community: {
+    name: string
+    description: string
+    id: number
+  } | null
   participantCount: number
+  isParticipant: boolean
+  isAdmin: boolean
 }
 
 export type TTripParticipant = {
