@@ -1,6 +1,5 @@
 import CustomHeader from '@/components/community/Header'
 import MemberCard from '@/components/MemberCard'
-import { TripCard } from '@/components/TripCard'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TCommunityDetail } from '@/state/communityStore'
@@ -11,6 +10,7 @@ import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Paragraph } from 'tamagui'
 import { YStack, XStack, H4, ScrollView, Button, View } from 'tamagui'
+import { format } from 'date-fns'
 
 export default function CommunityInfoScreen() {
   const { slug } = useLocalSearchParams()
@@ -63,44 +63,63 @@ export default function CommunityInfoScreen() {
     <YStack jc="space-between" h="100%">
       <SafeAreaView style={{ flexGrow: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <CustomHeader
-            title={community.name}
-            cover={community.coverImage}
-            avatar={community.profilePicture}
-          />
-          <YStack>
-            <YStack gap="$2" px="$4">
-              <XStack theme="gray_alt2" ai="center" gap="$2" overflow="hidden">
-                <Users size="$1" />
-                <Paragraph fontSize="$5" fontWeight="600" wordWrap="break-word">
-                  {community.memberCount} members
-                </Paragraph>
-              </XStack>
-              <Paragraph fontSize="$5">{community.description}</Paragraph>
+          <YStack gap="$6">
+            <YStack gap="$4">
+              <CustomHeader
+                title={community.name}
+                cover={community.coverImage}
+                avatar={community.profilePicture}
+              />
+              <YStack px="$4">
+                <XStack theme="gray_alt2" ai="center" gap="$2" overflow="hidden">
+                  <Users size="$1" />
+                  <Paragraph fontSize="$5" fontWeight="600" wordWrap="break-word">
+                    {community.memberCount} members
+                  </Paragraph>
+                </XStack>
+                <Paragraph fontSize="$5">{community.description}</Paragraph>
+              </YStack>
+            </YStack>
 
+            <YStack gap="$4" px="$4">
               <H4>Trips</H4>
               {community.trips.length > 0 ? (
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <XStack gap="$2">
+                <ScrollView showsHorizontalScrollIndicator={false}>
+                  <YStack gap="$3">
                     {community.trips.map((t) => (
-                      <TripCard
-                        key={t.id}
-                        title={t.name}
-                        description={t.description}
-                        participants={t.participants}
-                        participantCount={t.participantCount}
-                        startDate={new Date(t.startDate).toLocaleString()}
-                        startLocation={t.startLocation}
-                      />
+                      <XStack key={t.id} gap="$2" justifyContent="space-between" w="100%">
+                        <YStack flexGrow={1} gap="$2">
+                          <Paragraph fontSize="$6" fontWeight="bold">
+                            {t.name}
+                          </Paragraph>
+
+                          <XStack gap="$2">
+                            <Paragraph fontSize="$5" color="$color05">
+                              {format(new Date(t.startDate), 'MMMM d, yyyy')} -
+                            </Paragraph>
+                            <Paragraph fontSize="$5" color="$color05">
+                              {t.startLocation}
+                            </Paragraph>
+                          </XStack>
+                        </YStack>
+                        <Button
+                          variant="outlined"
+                          onPress={() => router.push(`/trip/${t.id}`)}
+                        >
+                          View
+                        </Button>
+                      </XStack>
                     ))}
-                  </XStack>
+                  </YStack>
                 </ScrollView>
               ) : (
                 <Paragraph fontSize="$5">
                   This community has not organized any trips yet
                 </Paragraph>
               )}
+            </YStack>
 
+            <YStack gap="$4" px="$4">
               <H4>Members</H4>
               <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -152,7 +171,9 @@ export default function CommunityInfoScreen() {
               fontSize: '$5',
             }}
             mb={insets.bottom}
-            onPress={handleJoin}
+            onPress={() => {
+              router.push(`/community/${slug}/chat`)
+            }}
           >
             Chat
           </Button>
