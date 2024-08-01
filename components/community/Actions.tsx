@@ -41,6 +41,16 @@ export default function Actions() {
     }
   }
 
+  const createTrip = async () => {
+    setIsOpen(false)
+    router.push({
+      pathname: '/create-trip',
+      params: {
+        communityId: slug,
+      },
+    })
+  }
+
   if (isMember === 'false') return null
 
   return (
@@ -92,6 +102,7 @@ export default function Actions() {
                   fontWeight: 'bold',
                   fontSize: '$5',
                 }}
+                onPress={createTrip}
               >
                 Add Trip
               </Button>
