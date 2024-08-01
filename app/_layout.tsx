@@ -8,7 +8,8 @@ import { SplashScreen, Stack, useGlobalSearchParams, useRouter } from 'expo-rout
 import { Provider } from './Provider'
 import { Plus } from '@tamagui/lucide-icons'
 import { Button } from 'tamagui'
-import Actions from '@/components/community/Actions'
+import CommunityActions from '@/components/community/Actions'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -29,6 +30,8 @@ export default function RootLayout() {
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
 
+  const queryClient = new QueryClient()
+
   useEffect(() => {
     if (interLoaded || interError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
@@ -40,7 +43,11 @@ export default function RootLayout() {
     return null
   }
 
-  return <RootLayoutNav />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RootLayoutNav />
+    </QueryClientProvider>
+  )
 }
 
 function RootLayoutNav() {
@@ -114,13 +121,7 @@ function RootLayoutNav() {
               },
             }}
           />
-          <Stack.Screen
-            name="join-community"
-            options={{
-              headerBackTitleVisible: false,
-              headerTitle: '',
-            }}
-          />
+
           <Stack.Screen name="navigation" />
           <Stack.Screen
             name="community/[slug]/index"
@@ -129,7 +130,7 @@ function RootLayoutNav() {
               title: '',
               headerBackTitleVisible: false,
               headerTransparent: true,
-              headerRight: () => <Actions />,
+              headerRight: () => <CommunityActions />,
             }}
           />
           <Stack.Screen
@@ -142,10 +143,8 @@ function RootLayoutNav() {
           <Stack.Screen
             name="profile/index"
             options={{
-              // headerShown: false,
               title: '',
               headerBackTitleVisible: false,
-              // headerRight: () => <Actions />,
             }}
           />
           <Stack.Screen
@@ -155,8 +154,6 @@ function RootLayoutNav() {
               title: '',
               headerBackTitleVisible: false,
               headerTransparent: true,
-
-              // headerRight: () => <Actions />,
             }}
           />
           <Stack.Screen
@@ -164,8 +161,8 @@ function RootLayoutNav() {
             options={{
               headerBackTitleVisible: false,
               title: '',
-              headerLargeTitle: true,
               headerTransparent: true,
+              headerLargeTitle: true,
             }}
           />
           <Stack.Screen
