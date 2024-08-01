@@ -71,4 +71,22 @@ const useAuthStore = create(
   ),
 )
 
+export const useGetMyTrips = () => {
+  const { data, refetch, isLoading, error } = useQuery({
+    queryKey: ['my-trips'],
+    queryFn: async () => {
+      const token = useAuthStore.getState().token
+      const response = await client.get<TAxiosResponse<TTripOverview[]>>('/user/trips', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data.data || []
+    },
+  })
+
+  return { data, refetch, isLoading, error }
+}
+
+
 export default useAuthStore
