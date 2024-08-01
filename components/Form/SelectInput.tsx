@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form'
-import { Input, Sheet, View, Text, YStack, ScrollView, Paragraph } from 'tamagui'
+import { Sheet, View, YStack, ScrollView, Paragraph } from 'tamagui'
 import { debounce } from 'lodash'
+import InputComponent, { type TInputComponentProps } from './Input'
 
 type TSelectInputProps<T extends FieldValues> = {
   name: Path<T>
@@ -9,14 +10,18 @@ type TSelectInputProps<T extends FieldValues> = {
   label: string
   fetchOptions: (inputText: string) => Promise<{ label: string; value: string }[]>
   debounceTime?: number
+  minSearchLength?: number
   onSelect?: (option: { label: string; value: string }) => void
+  inputProps?: TInputComponentProps
 }
 const SelectInput = <T extends FieldValues>({
   name,
   control,
   label,
   fetchOptions,
+  minSearchLength = 5,
   debounceTime = 300,
+  inputProps,
 }: TSelectInputProps<T>) => {
   const [isSelectOpen, setIsSelectOpen] = useState(false)
   const [options, setOptions] = useState<
@@ -36,7 +41,7 @@ const SelectInput = <T extends FieldValues>({
 
   const debouncedSearch = useCallback(
     debounce(async (searchText) => {
-      if (searchText.length > 5) {
+      if (searchText.length > minSearchLength) {
         const results = await fetchOptions(searchText)
         setOptions(results)
         setIsSelectOpen(true)
@@ -63,15 +68,33 @@ const SelectInput = <T extends FieldValues>({
 
   return (
     <View>
-      <Text>{label}</Text>
-      <Input
-        value={value}
-        onChangeText={handleInputChange}
-        placeholder="Type to search..."
+      <InputComponent
+        id="vehicle"
+        variant="inline"
+        label="Vehicle"
+        inputProps={{
+          placeholder: 'Type to search...',
+          value: options.find((option) => option.value === value)?.label,
+          onChangeText: handleInputChange,
+          minWidth: '20%',
+          textAlign: 'right',
+          // add red border if error
+          borderColor: error ? 'red' : undefined,
+        }}
+        message={error?.message}
+        messageProps={{
+          color: 'red',
+        }}
+        {...inputProps}
       />
-      {error && <Text color="red">{error.message}</Text>}
 
-      <Sheet modal open={isSelectOpen} onOpenChange={setIsSelectOpen} snapPoints={[50]}>
+      <Sheet
+        modal
+        open={isSelectOpen}
+        onOpenChange={setIsSelectOpen}
+        native
+        snapPoints={[50]}
+      >
         <Sheet.Overlay />
         <Sheet.Frame>
           <Sheet.Handle />
