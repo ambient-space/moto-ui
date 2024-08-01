@@ -1,6 +1,12 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useQuery } from '@tanstack/react-query'
+import { client } from '@/lib/axios'
+import type { TCommunityOverview } from './communityStore'
+import type { TAxiosResponse } from '@/lib/types'
+import type { TTripOverview } from './tripStore'
+
 export type TVehicleType =
   | 'Scooter'
   | 'Cruiser'
@@ -88,5 +94,24 @@ export const useGetMyTrips = () => {
   return { data, refetch, isLoading, error }
 }
 
+export const useGetMyCommunities = () => {
+  const { data, refetch, isLoading, error } = useQuery({
+    queryKey: ['my-communities'],
+    queryFn: async () => {
+      const token = useAuthStore.getState().token
+      const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
+        '/user/communities',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      return response.data.data || []
+    },
+  })
+
+  return { data, refetch, isLoading, error }
+}
 
 export default useAuthStore
