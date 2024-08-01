@@ -1,4 +1,5 @@
 import MemberCard from '@/components/MemberCard'
+import Actions from '@/components/trip/Actions'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TTripDetails } from '@/state/tripStore'
@@ -43,8 +44,12 @@ export default function TripInfoScreen() {
     })
 
     if (!res.data.error) {
-      router.setParams({ slug: slug as string })
+      router.setParams({ slug: slug as string, title: res.data.data.name })
       setTrip(res.data.data)
+      router.setParams({
+        isParticipant: res.data.data.isParticipant,
+        isAdmin: res.data.data.isAdmin,
+      })
     }
   }
 
@@ -74,8 +79,8 @@ export default function TripInfoScreen() {
     <YStack jc="space-between" h="100%">
       <SafeAreaView style={{ flexGrow: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <YStack gap="$4" px="$4">
-            <YStack gap="$2">
+          <YStack gap="$6" px="$4">
+            <YStack gap="$4">
               <XStack theme="gray_alt2" ai="center" gap="$2" overflow="hidden">
                 <MapPin size="$1" />
                 <Paragraph fontSize="$5" fontWeight="600" wordWrap="break-word">
@@ -83,6 +88,7 @@ export default function TripInfoScreen() {
                   {trip.endLocation && ` - ${trip.endLocation}`}
                 </Paragraph>
               </XStack>
+
               <XStack theme="gray_alt2" ai="center" gap="$2">
                 <Calendar size="$1" />
                 <Paragraph fontSize="$5" fontWeight="600">
@@ -97,9 +103,41 @@ export default function TripInfoScreen() {
                   {trip.participants.length} participants
                 </Paragraph>
               </XStack>
-              <Paragraph fontSize="$5">{trip.description}</Paragraph>
             </YStack>
-            <YStack gap="$2">
+            <Paragraph fontSize="$5">{trip.description}</Paragraph>
+
+            {trip.community !== null && (
+              <YStack gap="$4">
+                <H4>Organized By</H4>
+
+                <XStack
+                  key={trip.community.id}
+                  gap="$2"
+                  justifyContent="space-between"
+                  w="100%"
+                >
+                  <YStack flexGrow={1} gap="$2">
+                    <Paragraph fontSize="$6" fontWeight="bold">
+                      {trip.community.name}
+                    </Paragraph>
+
+                    <XStack gap="$2">
+                      <Paragraph fontSize="$5" color="$color05">
+                        {trip.community.description}
+                      </Paragraph>
+                    </XStack>
+                  </YStack>
+                  <Button
+                    variant="outlined"
+                    onPress={() => router.push(`/community/${trip.community!.id}`)}
+                  >
+                    View
+                  </Button>
+                </XStack>
+              </YStack>
+            )}
+
+            <YStack gap="$4">
               <H4>Meet The Other Participants</H4>
               <ScrollView
                 showsVerticalScrollIndicator={false}
