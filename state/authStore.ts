@@ -34,6 +34,16 @@ export type TUserProfileWithUsername = {
   authUser: {
     username: string
   }
+  userVehicles: {
+    id: number
+    year: number
+    vehicle: {
+      id: number
+      make: string
+      model: string
+      vehicleType: TVehicleType
+    }
+  }[]
 }
 
 export type TAuthStore = {
