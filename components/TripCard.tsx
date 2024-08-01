@@ -8,6 +8,7 @@ export type TTripCardProps = YStackProps & {
   participantCount: number
   startLocation: string
   startDate: string
+  isParticipant: boolean
 }
 
 export function TripCard(props: TTripCardProps) {
@@ -49,12 +50,13 @@ export function TripCard(props: TTripCardProps) {
         <Button
           backgroundColor="$color"
           color="$background"
+          onPress={props.onPress}
           textProps={{
             fontWeight: 'bold',
             fontSize: '$5',
           }}
         >
-          Join Trip
+          {props.isParticipant ? 'Go to Trip' : 'Join Trip'}
         </Button>
       </YStack>
     </YStack>
