@@ -3,6 +3,8 @@ import useAuthStore from './authStore'
 import { client } from '@/lib/axios'
 import type { TAxiosResponse } from '@/lib/types'
 import type { TTripOverview } from './tripStore'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
 export type TCommunityMember = {
   id: number
@@ -38,6 +40,7 @@ export type TCommunityOverview = {
   profilePicture: string
   members: TCommunityMember[]
   memberCount: number
+  isMember: boolean
 }
 
 export type TCommunityStore = {
@@ -89,3 +92,80 @@ export const useCommunityStore = create<TCommunityStore>((set) => ({
     }
   },
 }))
+
+export const useCommunityHomeHook = (page = 0, limit = 5) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['communities'],
+    queryFn: async () => {
+      const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
+        '/community/overview',
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+          },
+          params: {
+            page,
+            limit,
+          },
+        },
+      )
+      return response.data.data
+    },
+  })
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      useCommunityStore.setState({ communities: data ?? [] })
+    }
+  }, [data])
+
+  return { data: data ?? [], isLoading, error, refetch }
+}
+
+export const useCommunityPageHook = (limit = 5) => {
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['communities_page'],
+    queryFn: async ({ pageParam }) => {
+      const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
+        '/community/overview',
+        {
+          headers: {
+            Authorization: `Bearer ${useAuthStore.getState().token}`,
+          },
+          params: {
+            page: pageParam,
+            limit,
+          },
+        },
+      )
+      return {
+        data: response.data.data || [],
+        pageParams: pageParam,
+      }
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data?.length < limit ? undefined : lastPage.pageParams + 1
+    },
+  })
+
+  const flattenedData = data?.pages.flatMap((page) => page.data) ?? []
+
+  return {
+    data: flattenedData,
+    isLoading,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  }
+}
