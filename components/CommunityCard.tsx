@@ -6,6 +6,7 @@ export type TCommunityCardProps = YStackProps & {
   description: string
   members: TCommunityMember[]
   memberCount: number
+  isMember: boolean
 }
 
 export function CommunityCard(props: TCommunityCardProps) {
@@ -51,8 +52,9 @@ export function CommunityCard(props: TCommunityCardProps) {
             fontWeight: 'bold',
             fontSize: '$5',
           }}
+          onPress={props.onPress}
         >
-          Join Community
+          {props.isMember ? 'Go to Community' : 'Join Community'}
         </Button>
       </YStack>
     </YStack>
