@@ -52,12 +52,20 @@ export default function TripInfoScreen() {
     getTripDetails()
   }, [slug])
 
+  /**
+   * Set the header actions after the trip has been fetched
+   * This is due to an issue which causes the header actions to be mispositioned when placed
+   * https://github.com/software-mansion/react-native-screens/issues/432#issuecomment-1783867314
+   */
   useEffect(() => {
-    if (!trip) return
-    // set the title to the title of the trip
-    navigation.setOptions({
-      title: trip.name,
-    })
+    setTimeout(
+      () =>
+        navigation.setOptions({
+          title: trip?.name,
+          headerRight: () => <Actions />,
+        }),
+      100,
+    )
   }, [trip])
 
   if (!trip) return null
