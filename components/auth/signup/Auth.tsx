@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { client } from '@/lib/axios'
 import { AxiosError } from 'axios'
-import useAuthStore from '@/state/authStore'
+import { useToastController } from '@tamagui/toast'
 
 const SignupFormSchema = z.object({
   username: z
@@ -20,7 +20,7 @@ export default function Auth({
   handleLogin,
   onSuccess,
 }: { handleLogin: () => void; onSuccess: (token: string) => void }) {
-  const login = useAuthStore((state) => state.login)
+  const toast = useToastController()
 
   const {
     control,
@@ -37,8 +37,9 @@ export default function Auth({
       const res = await client.post('/auth/register', data)
       if (res.data.error !== null) {
         // handle errors
-        console.error(res.data.error)
-        return
+        return toast.show(res.data.error.message, {
+          duration: 5000,
+        })
       }
 
       // login(res.data.data.session, user.data.data)
@@ -53,11 +54,13 @@ export default function Auth({
           }
         }
 
-        setError('root', {
-          message: err.response.data.error.message,
+        toast.show(err.response.data.error.message, {
+          duration: 5000,
         })
       }
-      console.debug(err.response.data)
+      toast.show(err.response.data, {
+        duration: 5000,
+      })
     }
   }
 

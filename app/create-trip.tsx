@@ -10,6 +10,7 @@ import useAuthStore from '@/state/authStore'
 import { router, useLocalSearchParams } from 'expo-router'
 import DatePickerInput from '@/components/Form/DatePicker'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useToastController } from '@tamagui/toast'
 
 // TODO: handle location input with map support
 const CreateTripFormSchema = z.object({
@@ -48,6 +49,7 @@ export default function CreateTrips() {
   const token = useAuthStore((state) => state.token)
   const insets = useSafeAreaInsets()
   const { communityId } = useLocalSearchParams()
+  const toast = useToastController()
 
   // const [startLocation, setStartLocation] = useState("")
 
@@ -87,6 +89,13 @@ export default function CreateTrips() {
           },
         },
       )
+
+      if (res.data.error) {
+        return toast.show(res.data.error.message, {
+          duration: 5000,
+        })
+      }
+
       const d = res.data.data
       router.replace(`/trip/${d.id}`)
     } catch (e) {

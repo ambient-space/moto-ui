@@ -4,6 +4,7 @@ import useAuthStore from './authStore'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { TAxiosResponse } from '@/lib/types'
+import { useToastController } from '@tamagui/toast'
 
 export type TTripOverview = {
   id: number
@@ -80,6 +81,7 @@ export const useTripStore = create<TTripStore>((set) => ({
 }))
 
 export const useTripHomeHook = (page = 0, limit = 5) => {
+  const toast = useToastController()
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['trips'],
     queryFn: async () => {
@@ -99,6 +101,12 @@ export const useTripHomeHook = (page = 0, limit = 5) => {
     },
   })
 
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
+
   useEffect(() => {
     if (!isLoading && !error) {
       useTripStore.setState({ trips: data ?? [] })
@@ -109,6 +117,7 @@ export const useTripHomeHook = (page = 0, limit = 5) => {
 }
 
 export const useTripPageHook = (limit = 5) => {
+  const toast = useToastController()
   const {
     data,
     isLoading,
@@ -142,6 +151,12 @@ export const useTripPageHook = (limit = 5) => {
       return lastPage.data?.length < limit ? undefined : lastPage.pageParams + 1
     },
   })
+
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
 
   const flattenedData = data?.pages.flatMap((page) => page.data) ?? []
 
