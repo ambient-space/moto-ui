@@ -10,6 +10,8 @@ import { Plus } from '@tamagui/lucide-icons'
 import { Button } from 'tamagui'
 import CommunityActions from '@/components/community/Actions'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ToastProvider } from '@tamagui/toast'
+import CurrentToast from '@/components/CurrentToast'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,131 +61,135 @@ function RootLayoutNav() {
   return (
     <Provider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: 'transparent',
-            },
-          }}
-        >
-          <Stack.Screen
-            name="index"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="trips"
-            options={{
-              headerBackTitleVisible: false,
+        <ToastProvider>
+          <CurrentToast />
+
+          <Stack
+            screenOptions={{
               headerStyle: {
                 backgroundColor: 'transparent',
               },
-              headerTitle: 'Explore Trips',
-              headerRight: () => (
-                <Button
-                  unstyled
-                  onPress={() => {
-                    router.push('/create-trip')
-                  }}
-                >
-                  <Plus />
-                </Button>
-              ),
-              headerLargeTitle: true,
-              headerSearchBarOptions: {
-                placeholder: 'Search for trips',
-              },
             }}
-          />
-          <Stack.Screen
-            name="communities"
-            options={{
-              headerBackTitleVisible: false,
-              headerTitle: 'Explore Communities',
-              headerLargeTitle: true,
-              headerRight: () => (
-                <Button
-                  unstyled
-                  onPress={() => {
-                    router.push('/create-community')
-                  }}
-                >
-                  <Plus />
-                </Button>
-              ),
-              headerSearchBarOptions: {
-                placeholder: 'Search for communities',
-                onSearchButtonPress: () => {
-                  console.debug('Search button pressed')
+          >
+            <Stack.Screen
+              name="index"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="trips"
+              options={{
+                headerBackTitleVisible: false,
+                headerStyle: {
+                  backgroundColor: 'transparent',
                 },
-              },
-            }}
-          />
+                headerTitle: 'Explore Trips',
+                headerRight: () => (
+                  <Button
+                    unstyled
+                    onPress={() => {
+                      router.push('/create-trip')
+                    }}
+                  >
+                    <Plus />
+                  </Button>
+                ),
+                headerLargeTitle: true,
+                headerSearchBarOptions: {
+                  placeholder: 'Search for trips',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="communities"
+              options={{
+                headerBackTitleVisible: false,
+                headerTitle: 'Explore Communities',
+                headerLargeTitle: true,
+                headerRight: () => (
+                  <Button
+                    unstyled
+                    onPress={() => {
+                      router.push('/create-community')
+                    }}
+                  >
+                    <Plus />
+                  </Button>
+                ),
+                headerSearchBarOptions: {
+                  placeholder: 'Search for communities',
+                  onSearchButtonPress: () => {
+                    console.debug('Search button pressed')
+                  },
+                },
+              }}
+            />
 
-          <Stack.Screen name="navigation" />
-          <Stack.Screen
-            name="community/[slug]/index"
-            options={{
-              // headerShown: false,
-              title: '',
-              headerBackTitleVisible: false,
-              headerTransparent: true,
-              headerRight: () => <CommunityActions />,
-            }}
-          />
-          <Stack.Screen
-            name="community/[slug]/chat"
-            options={{
-              headerBackTitleVisible: false,
-              title: params.title as string,
-            }}
-          />
-          <Stack.Screen
-            name="profile/index"
-            options={{
-              title: '',
-              headerBackTitleVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="profile/[slug]/index"
-            options={{
-              // headerShown: false,
-              title: '',
-              headerBackTitleVisible: false,
-              headerTransparent: true,
-            }}
-          />
-          <Stack.Screen
-            name="trip/[slug]/index"
-            options={{
-              headerBackTitleVisible: false,
-              title: '',
-              headerTransparent: true,
-              headerLargeTitle: true,
-            }}
-          />
-          <Stack.Screen
-            name="create-community"
-            options={{
-              headerBackTitleVisible: false,
-              headerTitle: 'Create Community',
-              headerTransparent: true,
-              headerLargeTitle: true,
-            }}
-          />
-          <Stack.Screen
-            name="create-trip"
-            options={{
-              headerBackTitleVisible: false,
-              headerTitle: 'Create Trip',
-              headerTransparent: true,
-              headerLargeTitle: true,
-            }}
-          />
-        </Stack>
+            <Stack.Screen name="navigation" />
+            <Stack.Screen
+              name="community/[slug]/index"
+              options={{
+                // headerShown: false,
+                title: '',
+                headerBackTitleVisible: false,
+                headerTransparent: true,
+                headerRight: () => <CommunityActions />,
+              }}
+            />
+            <Stack.Screen
+              name="community/[slug]/chat"
+              options={{
+                headerBackTitleVisible: false,
+                title: params.title as string,
+              }}
+            />
+            <Stack.Screen
+              name="profile/index"
+              options={{
+                title: '',
+                headerBackTitleVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="profile/[slug]/index"
+              options={{
+                // headerShown: false,
+                title: '',
+                headerBackTitleVisible: false,
+                headerTransparent: true,
+              }}
+            />
+            <Stack.Screen
+              name="trip/[slug]/index"
+              options={{
+                headerBackTitleVisible: false,
+                title: '',
+                headerTransparent: true,
+                headerLargeTitle: true,
+              }}
+            />
+            <Stack.Screen
+              name="create-community"
+              options={{
+                headerBackTitleVisible: false,
+                headerTitle: 'Create Community',
+                headerTransparent: true,
+                headerLargeTitle: true,
+              }}
+            />
+            <Stack.Screen
+              name="create-trip"
+              options={{
+                headerBackTitleVisible: false,
+                headerTitle: 'Create Trip',
+                headerTransparent: true,
+                headerLargeTitle: true,
+              }}
+            />
+          </Stack>
+        </ToastProvider>
       </ThemeProvider>
     </Provider>
   )

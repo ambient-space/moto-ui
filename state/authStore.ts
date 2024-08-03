@@ -6,6 +6,7 @@ import { client } from '@/lib/axios'
 import type { TCommunityOverview } from './communityStore'
 import type { TAxiosResponse } from '@/lib/types'
 import type { TTripOverview } from './tripStore'
+import { useToastController } from '@tamagui/toast'
 
 export type TVehicleType =
   | 'Scooter'
@@ -78,6 +79,7 @@ const useAuthStore = create(
 )
 
 export const useGetMyTrips = () => {
+  const toast = useToastController()
   const { data, refetch, isLoading, error } = useQuery({
     queryKey: ['my-trips'],
     queryFn: async () => {
@@ -91,10 +93,16 @@ export const useGetMyTrips = () => {
     },
   })
 
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
   return { data, refetch, isLoading, error }
 }
 
 export const useGetMyCommunities = () => {
+  const toast = useToastController()
   const { data, refetch, isLoading, error } = useQuery({
     queryKey: ['my-communities'],
     queryFn: async () => {
@@ -110,6 +118,12 @@ export const useGetMyCommunities = () => {
       return response.data.data || []
     },
   })
+
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
 
   return { data, refetch, isLoading, error }
 }

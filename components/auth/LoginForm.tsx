@@ -7,6 +7,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
+import { useToastController } from '@tamagui/toast'
 
 export type TLoginFormProps = {
   handleSignUp: () => void
@@ -19,6 +20,7 @@ const LoginFormSchema = z.object({
 
 export default function LoginForm({ handleSignUp }: TLoginFormProps) {
   const login = useAuthStore((state) => state.login)
+  const toast = useToastController()
 
   const {
     control,
@@ -36,8 +38,11 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
 
       if (res.data.error !== null) {
         // handle errors
-        console.error(res.data.error)
-        return
+
+        return toast.show(res.data.error.message, {
+          type: 'error',
+          duration: 5000,
+        })
       }
 
       const user = await client.get('/user', {
@@ -48,6 +53,10 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
 
       if (user.data.error !== null) {
         // handle errors
+        toast.show(user.data.error.message, {
+          type: 'error',
+          duration: 5000,
+        })
       }
       login(res.data.data.session, user.data.data)
       router.push('/home')
@@ -57,8 +66,10 @@ export default function LoginForm({ handleSignUp }: TLoginFormProps) {
         setError('root', {
           message: err.response.data.error.message,
         })
-
-        console.debug(err.response.data.error.message)
+        toast.show(err.response.data.error.message, {
+          type: 'error',
+          duration: 5000,
+        })
       }
     }
   }

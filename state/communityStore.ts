@@ -5,6 +5,7 @@ import type { TAxiosResponse } from '@/lib/types'
 import type { TTripOverview } from './tripStore'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useToastController } from '@tamagui/toast'
 
 export type TCommunityMember = {
   id: number
@@ -94,6 +95,7 @@ export const useCommunityStore = create<TCommunityStore>((set) => ({
 }))
 
 export const useCommunityHomeHook = (page = 0, limit = 5) => {
+  const toast = useToastController()
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['communities'],
     queryFn: async () => {
@@ -113,6 +115,12 @@ export const useCommunityHomeHook = (page = 0, limit = 5) => {
     },
   })
 
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
+
   useEffect(() => {
     if (!isLoading && !error) {
       useCommunityStore.setState({ communities: data ?? [] })
@@ -123,6 +131,7 @@ export const useCommunityHomeHook = (page = 0, limit = 5) => {
 }
 
 export const useCommunityPageHook = (limit = 5) => {
+  const toast = useToastController()
   const {
     data,
     isLoading,
@@ -156,6 +165,12 @@ export const useCommunityPageHook = (limit = 5) => {
       return lastPage.data?.length < limit ? undefined : lastPage.pageParams + 1
     },
   })
+
+  if (error) {
+    toast.show(error.message, {
+      duration: 5000,
+    })
+  }
 
   const flattenedData = data?.pages.flatMap((page) => page.data) ?? []
 

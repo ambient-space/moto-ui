@@ -20,6 +20,7 @@ import useAuthStore from '@/state/authStore'
 import { router } from 'expo-router'
 import TextAreaComponent from '@/components/Form/TextArea'
 import { pickImage } from '@/lib/helpers'
+import { useToastController } from '@tamagui/toast'
 
 const SignupFormSchema = z.object({
   fullName: z
@@ -37,6 +38,7 @@ type TProfileProps = {
 
 export default function Profile({ token, onSuccess }: TProfileProps) {
   const login = useAuthStore((state) => state.login)
+  const toast = useToastController()
 
   const {
     control,
@@ -61,8 +63,9 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
       })
       if (res.data.error !== null) {
         // handle errors
-        console.error(res.data.error)
-        return
+        return toast.show(res.data.error.message, {
+          duration: 5000,
+        })
       }
 
       const user = await client.get('/user', {
@@ -73,6 +76,9 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
 
       if (user.data.error !== null) {
         // handle errors
+        toast.show(user.data.error.message, {
+          duration: 5000,
+        })
       }
       login(token, user.data.data)
       router.navigate('/home')
@@ -88,11 +94,13 @@ export default function Profile({ token, onSuccess }: TProfileProps) {
           }
         }
 
-        setError('root', {
-          message: err.response.data.error.message,
+        toast.show(err.response.data.error.message, {
+          duration: 5000,
         })
       }
-      console.debug(err)
+      toast.show(err.response.data, {
+        duration: 5000,
+      })
     }
   }
 
