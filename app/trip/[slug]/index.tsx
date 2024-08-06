@@ -22,7 +22,7 @@ export default function TripInfoScreen() {
   const handleJoin = async () => {
     try {
       await client.post(
-        `/trip/join/${slug}`,
+        `/trip/${slug}/join`,
         {},
         {
           headers: {
