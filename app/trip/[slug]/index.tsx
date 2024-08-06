@@ -22,7 +22,7 @@ export default function TripInfoScreen() {
   const handleJoin = async () => {
     try {
       await client.post(
-        `/trip/join/${slug}`,
+        `/trip/${slug}/join`,
         {},
         {
           headers: {
@@ -100,7 +100,7 @@ export default function TripInfoScreen() {
               <XStack theme="gray_alt2" ai="center" gap="$2">
                 <Users size="$1" />
                 <Paragraph theme="gray_alt2" fontSize="$5" fontWeight="600">
-                  {trip.participants.length} participants
+                  {trip.participantCount} participants
                 </Paragraph>
               </XStack>
             </YStack>
@@ -137,36 +137,67 @@ export default function TripInfoScreen() {
               </YStack>
             )}
 
-            <YStack gap="$4">
-              <H4>Meet The Other Participants</H4>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                maxHeight={300}
-                overflow="hidden"
-                mt="$2"
-              >
-                <YStack gap="$3">
-                  {trip.participants.map((member) => (
-                    <MemberCard
-                      key={member.userId}
-                      member={{
-                        id: member.userId,
-                        profile: {
-                          profilePicture: member.profile.profilePicture,
-                          fullName: member.profile.fullName,
-                        },
-                        isCurrentUser: member.userId === userId,
-                        role: member.role,
-                      }}
-                    />
-                  ))}
-                </YStack>
-              </ScrollView>
-            </YStack>
+            {trip.isParticipant ? (
+              <YStack gap="$4">
+                <H4>Meet The Other Participants</H4>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  maxHeight={300}
+                  overflow="hidden"
+                  mt="$2"
+                >
+                  <YStack gap="$3">
+                    {trip.participants.map((member) => (
+                      <MemberCard
+                        key={member.userId}
+                        member={{
+                          id: member.userId,
+                          profile: {
+                            profilePicture: member.profile.profilePicture,
+                            fullName: member.profile.fullName,
+                          },
+                          isCurrentUser: member.userId === userId,
+                          role: member.role,
+                        }}
+                      />
+                    ))}
+                  </YStack>
+                </ScrollView>
+              </YStack>
+            ) : null}
+
+            {trip.isAdmin ? (
+              <YStack gap="$4">
+                <H4>Meet The Other Participants</H4>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  maxHeight={300}
+                  overflow="hidden"
+                  mt="$2"
+                >
+                  <YStack gap="$3">
+                    {trip.joinRequests.map((member) => (
+                      <MemberCard
+                        key={member.userId}
+                        member={{
+                          id: member.userId,
+                          profile: {
+                            profilePicture: member.profile.profilePicture,
+                            fullName: member.profile.fullName,
+                          },
+                          isCurrentUser: member.userId === userId,
+                          role: member.status,
+                        }}
+                      />
+                    ))}
+                  </YStack>
+                </ScrollView>
+              </YStack>
+            ) : null}
           </YStack>
         </ScrollView>
       </SafeAreaView>
-      {userId && !trip.participants.find((t) => t.userId === userId) && (
+      {userId && !trip.isParticipant && (
         <View p="$4">
           <Button
             backgroundColor="$color"

@@ -33,21 +33,38 @@ export type TTripDetails = {
   endLocation: string
   route: { lat: number; lng: number }[]
   maxParticipants: number
-  participants: (TTripParticipant & {
-    profile: {
-      fullName: string
-      profilePicture: string
-    }
-  })[]
+
   community: {
     name: string
     description: string
     id: number
   } | null
   participantCount: number
-  isParticipant: boolean
-  isAdmin: boolean
-}
+} & (
+  | {
+      isParticipant: true
+      participants: (TTripParticipant & {
+        profile: {
+          fullName: string
+          profilePicture: string
+        }
+      })[]
+    }
+  | {
+      isParticipant: false
+      participants?: undefined
+    }
+) &
+  (
+    | {
+        isAdmin: true
+        joinRequests: TTJoinRequest[]
+      }
+    | {
+        isAdmin: false
+        joinRequests?: undefined
+      }
+  )
 
 export type TTripParticipant = {
   id: number
@@ -57,6 +74,16 @@ export type TTripParticipant = {
   role: 'organizer' | 'participant'
 }
 
+export type TTJoinRequest = {
+  id: number
+  tripId: number
+  userId: string
+  status: 'rejected' | 'pending' | 'approved'
+  profile: {
+    fullName: string
+    profilePicture: string
+  }
+}
 export type TTripStore = {
   trips: TTripOverview[]
   fetchTrips: () => void
