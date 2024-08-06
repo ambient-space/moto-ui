@@ -23,7 +23,7 @@ export default function CommunityInfoScreen() {
   const handleJoin = async () => {
     try {
       await client.post(
-        `/community/join/${slug}`,
+        `/community/${slug}/join`,
         {},
         {
           headers: {
