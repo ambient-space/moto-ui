@@ -27,7 +27,7 @@ export default function Actions() {
   const handleLeave = async () => {
     try {
       await client.post(
-        `/community/leave/${slug}`,
+        `/community/${slug}/leave/`,
         {},
         {
           headers: {
