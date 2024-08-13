@@ -1,5 +1,6 @@
 import MemberCard from '@/components/MemberCard'
 import Actions from '@/components/trip/Actions'
+import { tripApiRoutes } from '@/lib/api'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TTripDetails } from '@/state/tripStore'
@@ -22,7 +23,7 @@ export default function TripInfoScreen() {
   const handleJoin = async () => {
     try {
       await client.post(
-        `/trip/${slug}/join`,
+        tripApiRoutes['post/trip/:id/join']({ id: slug as string }),
         {},
         {
           headers: {
@@ -37,7 +38,7 @@ export default function TripInfoScreen() {
   }
 
   const getTripDetails = async () => {
-    const res = await client.get(`/trip/${slug}`, {
+    const res = await client.get(tripApiRoutes['get/trip/:id']({ id: slug as string }), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
