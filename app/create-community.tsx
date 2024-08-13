@@ -23,6 +23,7 @@ import useAuthStore from '@/state/authStore'
 import { router } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { pickImage } from '@/lib/helpers'
+import { communityApiRoutes } from '@/lib/api'
 
 const CreateCommunityFormSchema = z.object({
   name: z.string({ message: 'required' }).min(3, 'Name must be at least 3 characters'),
@@ -49,7 +50,7 @@ export default function CreateCommunity() {
 
   const onSubmit = async (data: typeof CreateCommunityFormSchema._type) => {
     try {
-      const res = await client.post('/community', data, {
+      const res = await client.post(communityApiRoutes['post/community/index'](), data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
