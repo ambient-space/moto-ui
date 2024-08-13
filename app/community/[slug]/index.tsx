@@ -4,26 +4,26 @@ import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import type { TCommunityDetail } from '@/state/communityStore'
 import { Users } from '@tamagui/lucide-icons'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Paragraph } from 'tamagui'
 import { YStack, XStack, H4, ScrollView, Button, View } from 'tamagui'
 import { format } from 'date-fns'
+import { communityApiRoutes } from '@/lib/api'
 
 export default function CommunityInfoScreen() {
   const { slug } = useLocalSearchParams()
   const token = useAuthStore((state) => state.token)
   const userId = useAuthStore((state) => state.user?.id)
   const [community, setCommunity] = useState<TCommunityDetail | null>(null)
-  const navigation = useNavigation()
   const insets = useSafeAreaInsets()
 
   const handleJoin = async () => {
     try {
       await client.post(
-        `/community/${slug}/join`,
+        communityApiRoutes['post/community/:id/join']({ id: slug as string }),
         {},
         {
           headers: {
@@ -38,11 +38,14 @@ export default function CommunityInfoScreen() {
   }
 
   const getCommunityDetails = async () => {
-    const res = await client.get(`/community/${slug}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await client.get(
+      communityApiRoutes['get/community/:id']({ id: slug as string }),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!res.data.error) {
       setCommunity(res.data.data)
