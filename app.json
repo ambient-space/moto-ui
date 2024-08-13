@@ -21,7 +21,8 @@
         "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
         "NSLocationAlwaysUsageDescription": "This app requires access to your location when open.",
-        "deploymentTarget": "14"
+        "deploymentTarget": "14",
+        "NSPhotoLibraryUsageDescription": "This app requires access to your photos."
       }
     },
     "android": {

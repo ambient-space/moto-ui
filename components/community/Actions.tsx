@@ -1,3 +1,4 @@
+import { communityApiRoutes } from '@/lib/api'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import { CircleEllipsis } from '@tamagui/lucide-icons'
@@ -13,11 +14,16 @@ export default function Actions() {
 
   const handleDelete = async () => {
     try {
-      await client.delete(`/community/${slug}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await client.delete(
+        communityApiRoutes['delete/community/:id']({
+          id: slug as string,
+        }),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
       router.back()
     } catch (error) {
       console.error(error)
@@ -27,7 +33,9 @@ export default function Actions() {
   const handleLeave = async () => {
     try {
       await client.post(
-        `/community/leave/${slug}`,
+        communityApiRoutes['post/community/:id/leave']({
+          id: slug as string,
+        }),
         {},
         {
           headers: {

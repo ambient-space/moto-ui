@@ -31,7 +31,7 @@ export default function MainLayout() {
             px="$4"
             onPress={() => {
               // open profile page
-              router.push('profile')
+              router.navigate('/profile')
             }}
           >
             <Avatar circular size="$2">

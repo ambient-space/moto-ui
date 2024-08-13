@@ -1,18 +1,19 @@
+import { tripApiRoutes } from '@/lib/api'
 import { client } from '@/lib/axios'
 import useAuthStore from '@/state/authStore'
 import { CircleEllipsis } from '@tamagui/lucide-icons'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router, useGlobalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import { Adapt, Button, Popover, View, YStack } from 'tamagui'
 
 export default function Actions() {
-  const { isAdmin, isParticipant, slug } = useLocalSearchParams()
+  const { isAdmin, isParticipant, slug } = useGlobalSearchParams()
   const token = useAuthStore((state) => state.token)
   const [isOpen, setIsOpen] = useState(false)
 
   const handleDelete = async () => {
     try {
-      await client.delete(`/trip/${slug}`, {
+      await client.delete(tripApiRoutes['delete/trip/:id']({ id: slug as string }), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -26,7 +27,7 @@ export default function Actions() {
   const handleLeave = async () => {
     try {
       await client.post(
-        `/trip/leave/${slug}`,
+        tripApiRoutes['post/trip/:id/leave']({ id: slug as string }),
         {},
         {
           headers: {
@@ -41,7 +42,6 @@ export default function Actions() {
   }
 
   if (!isParticipant || !isAdmin || isParticipant === 'false') return null
-
   return (
     <View>
       <Popover open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>

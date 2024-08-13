@@ -6,6 +6,7 @@ import type { TTripOverview } from './tripStore'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useToastController } from '@tamagui/toast'
+import { communityApiRoutes } from '@/lib/api'
 
 export type TCommunityMember = {
   id: number
@@ -74,7 +75,7 @@ export const useCommunityStore = create<TCommunityStore>((set) => ({
   fetchCommunities: async () => {
     try {
       const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
-        '/community/overview',
+        communityApiRoutes['get/community/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
@@ -100,7 +101,7 @@ export const useCommunityHomeHook = (page = 0, limit = 5) => {
     queryKey: ['communities'],
     queryFn: async () => {
       const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
-        '/community/overview',
+        communityApiRoutes['get/community/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
@@ -144,7 +145,7 @@ export const useCommunityPageHook = (limit = 5) => {
     queryKey: ['communities_page'],
     queryFn: async ({ pageParam }) => {
       const response = await client.get<TAxiosResponse<TCommunityOverview[]>>(
-        '/community/overview',
+        communityApiRoutes['get/community/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,

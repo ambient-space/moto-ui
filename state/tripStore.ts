@@ -5,6 +5,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { TAxiosResponse } from '@/lib/types'
 import { useToastController } from '@tamagui/toast'
+import { tripApiRoutes } from '@/lib/api'
 
 export type TTripOverview = {
   id: number
@@ -33,21 +34,38 @@ export type TTripDetails = {
   endLocation: string
   route: { lat: number; lng: number }[]
   maxParticipants: number
-  participants: (TTripParticipant & {
-    profile: {
-      fullName: string
-      profilePicture: string
-    }
-  })[]
+
   community: {
     name: string
     description: string
     id: number
   } | null
   participantCount: number
-  isParticipant: boolean
-  isAdmin: boolean
-}
+} & (
+  | {
+      isParticipant: true
+      participants: (TTripParticipant & {
+        profile: {
+          fullName: string
+          profilePicture: string
+        }
+      })[]
+    }
+  | {
+      isParticipant: false
+      participants?: undefined
+    }
+) &
+  (
+    | {
+        isAdmin: true
+        joinRequests: TTJoinRequest[]
+      }
+    | {
+        isAdmin: false
+        joinRequests?: undefined
+      }
+  )
 
 export type TTripParticipant = {
   id: number
@@ -57,6 +75,16 @@ export type TTripParticipant = {
   role: 'organizer' | 'participant'
 }
 
+export type TTJoinRequest = {
+  id: number
+  tripId: number
+  userId: string
+  status: 'rejected' | 'pending' | 'approved'
+  profile: {
+    fullName: string
+    profilePicture: string
+  }
+}
 export type TTripStore = {
   trips: TTripOverview[]
   fetchTrips: () => void
@@ -67,7 +95,7 @@ export const useTripStore = create<TTripStore>((set) => ({
   tripParticipants: [],
   fetchTrips: async () => {
     try {
-      const response = await client.get('/trip/overview', {
+      const response = await client.get(tripApiRoutes['get/trip/overview'](), {
         headers: {
           Authorization: `Bearer ${useAuthStore.getState().token}`,
         },
@@ -86,7 +114,7 @@ export const useTripHomeHook = (page = 0, limit = 5) => {
     queryKey: ['trips'],
     queryFn: async () => {
       const response = await client.get<TAxiosResponse<TTripOverview[]>>(
-        '/trip/overview',
+        tripApiRoutes['get/trip/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
@@ -130,7 +158,7 @@ export const useTripPageHook = (limit = 5) => {
     queryKey: ['trips_page'],
     queryFn: async ({ pageParam }) => {
       const response = await client.get<TAxiosResponse<TTripOverview[]>>(
-        '/trip/overview',
+        tripApiRoutes['get/trip/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
