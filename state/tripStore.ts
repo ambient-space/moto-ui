@@ -5,6 +5,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { TAxiosResponse } from '@/lib/types'
 import { useToastController } from '@tamagui/toast'
+import { tripApiRoutes } from '@/lib/api'
 
 export type TTripOverview = {
   id: number
@@ -94,7 +95,7 @@ export const useTripStore = create<TTripStore>((set) => ({
   tripParticipants: [],
   fetchTrips: async () => {
     try {
-      const response = await client.get('/trip/overview', {
+      const response = await client.get(tripApiRoutes['get/trip/overview'](), {
         headers: {
           Authorization: `Bearer ${useAuthStore.getState().token}`,
         },
@@ -113,7 +114,7 @@ export const useTripHomeHook = (page = 0, limit = 5) => {
     queryKey: ['trips'],
     queryFn: async () => {
       const response = await client.get<TAxiosResponse<TTripOverview[]>>(
-        '/trip/overview',
+        tripApiRoutes['get/trip/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
@@ -157,7 +158,7 @@ export const useTripPageHook = (limit = 5) => {
     queryKey: ['trips_page'],
     queryFn: async ({ pageParam }) => {
       const response = await client.get<TAxiosResponse<TTripOverview[]>>(
-        '/trip/overview',
+        tripApiRoutes['get/trip/overview'](),
         {
           headers: {
             Authorization: `Bearer ${useAuthStore.getState().token}`,
